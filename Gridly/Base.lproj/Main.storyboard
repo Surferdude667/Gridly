@@ -11,8 +11,8 @@
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="Gridly" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="ilO-wh-qxc"/>
-                        <viewControllerLayoutGuide type="bottom" id="bLY-FN-ck3"/>
+                        <viewControllerLayoutGuide type="top" id="43K-z6-N35"/>
+                        <viewControllerLayoutGuide type="bottom" id="a3q-Gy-jBU"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>

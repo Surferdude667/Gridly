@@ -12,6 +12,7 @@ class ViewController: UIViewController {
     
     let backgroundImage = UIView()
     var squarePath = UIBezierPath()
+    let line = CAShapeLayer()
     
     @IBOutlet weak var background: UIImageView!
         
@@ -41,19 +42,52 @@ class ViewController: UIViewController {
         maskLayer.addSublayer(squareLayer)
         
         backgroundImage.layer.mask = maskLayer
+        
     }
     
     //  TODO: Make the grid layout
     func drawGrid() {
-        print("Hej")
-        print(squarePath.bounds.origin.x)
-        print(squarePath.bounds.origin.y)
+        
+//        let x = CGPoint(x: 100.0, y: 150.0)
+//        let y = CGPoint(x: 200.0, y: 250.0)
+        
+        let x = CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y)
+        let y = CGPoint(x: squarePath.bounds.origin.x + squarePath.bounds.width, y: squarePath.bounds.origin.y)
+        
+        
+        addLine(fromPoint: x, toPoint: y)
     }
+    
+    
+    func addLine(fromPoint start: CGPoint, toPoint end:CGPoint) {
+        
+        let linePath = UIBezierPath()
+        linePath.move(to: start)
+        linePath.addLine(to: end)
+        line.path = linePath.cgPath
+        line.strokeColor = UIColor.red.cgColor
+        line.lineWidth = 1
+        line.lineJoin = CAShapeLayerLineJoin.round
+        self.view.layer.addSublayer(line)
+        print("Line added")
+    }
+        
     
     //  TODO: This function is being called 2 times on iPhone
     override func viewDidLayoutSubviews() {
-        drawGrid()
+        print("Called")
         createMask()
+        drawGrid()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+       
     }
 
     override func viewDidLoad() {
