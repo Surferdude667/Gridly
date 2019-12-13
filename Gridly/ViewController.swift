@@ -12,13 +12,13 @@ class ViewController: UIViewController {
     
     let backgroundImage = UIView()
     var squarePath = UIBezierPath()
-    let line = CAShapeLayer()
+    let gridLayer = CALayer()
     
     @IBOutlet weak var background: UIImageView!
         
     func createMask() {
         backgroundImage.frame = self.view.frame
-        backgroundImage.backgroundColor =  UIColor.black.withAlphaComponent(0.6)
+        backgroundImage.backgroundColor =  UIColor.white.withAlphaComponent(0.6)
         self.view.addSubview(backgroundImage)
         
         var squareSize = CGFloat()
@@ -45,51 +45,49 @@ class ViewController: UIViewController {
         
     }
     
-    //  TODO: Make the grid layout
     func drawGrid() {
+        var horizontalOffset: CGFloat = 0.0
+        var verticalOffset: CGFloat = 0.0
+        let offsetCalculation: CGFloat = squarePath.bounds.width / 4
+        gridLayer.sublayers?.removeAll()
         
-//        let x = CGPoint(x: 100.0, y: 150.0)
-//        let y = CGPoint(x: 200.0, y: 250.0)
+        for _ in 0..<5 {
+            let x = CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y + horizontalOffset)
+            let y = CGPoint(x: squarePath.bounds.origin.x + squarePath.bounds.width, y: squarePath.bounds.origin.y + horizontalOffset)
+            addLine(fromPoint: x, toPoint: y)
+            horizontalOffset = horizontalOffset + offsetCalculation
+        }
         
-        let x = CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y)
-        let y = CGPoint(x: squarePath.bounds.origin.x + squarePath.bounds.width, y: squarePath.bounds.origin.y)
-        
-        
-        addLine(fromPoint: x, toPoint: y)
+        for _ in 0..<5 {
+            let x = CGPoint(x: squarePath.bounds.origin.x + verticalOffset, y: squarePath.bounds.origin.y)
+            let y = CGPoint(x: squarePath.bounds.origin.x + verticalOffset, y: squarePath.bounds.origin.y + squarePath.bounds.width)
+            addLine(fromPoint: x, toPoint: y)
+            verticalOffset = verticalOffset + offsetCalculation
+        }
     }
     
     
     func addLine(fromPoint start: CGPoint, toPoint end:CGPoint) {
-        
+        let line = CAShapeLayer()
         let linePath = UIBezierPath()
         linePath.move(to: start)
         linePath.addLine(to: end)
         line.path = linePath.cgPath
-        line.strokeColor = UIColor.red.cgColor
+        line.strokeColor = UIColor.white.cgColor
         line.lineWidth = 1
         line.lineJoin = CAShapeLayerLineJoin.round
-        self.view.layer.addSublayer(line)
-        print("Line added")
+        
+        gridLayer.addSublayer(line)
+        self.view.layer.addSublayer(gridLayer)
     }
         
     
-    //  TODO: This function is being called 2 times on iPhone
     override func viewDidLayoutSubviews() {
         print("Called")
         createMask()
         drawGrid()
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-        
-       
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
     }
