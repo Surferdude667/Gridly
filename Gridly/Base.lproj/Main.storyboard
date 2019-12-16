@@ -18,31 +18,21 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="Pxt-7b-4is">
+                            <imageView autoresizesSubviews="NO" opaque="NO" clearsContextBeforeDrawing="NO" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" image="background" translatesAutoresizingMaskIntoConstraints="NO" id="Pxt-7b-4is">
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4rA-py-hul">
-                                <rect key="frame" x="87" y="680" width="240" height="128"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                            </imageView>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="jSF-S8-OLa">
-                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <edgeInsets key="layoutMargins" top="0.0" left="0.0" bottom="0.0" right="0.0"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="jSF-S8-OLa" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="8Kl-OR-Xa4"/>
-                            <constraint firstItem="jSF-S8-OLa" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="WjY-Q4-eY8"/>
-                            <constraint firstItem="jSF-S8-OLa" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailing" id="kYK-9M-agj"/>
-                            <constraint firstAttribute="bottom" secondItem="jSF-S8-OLa" secondAttribute="bottom" id="vfH-6O-kS5"/>
+                            <constraint firstAttribute="trailing" secondItem="Pxt-7b-4is" secondAttribute="trailing" id="FdJ-eJ-bQh"/>
+                            <constraint firstAttribute="bottom" secondItem="Pxt-7b-4is" secondAttribute="bottom" id="LHi-GX-WCu"/>
+                            <constraint firstItem="Pxt-7b-4is" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="j61-cu-Wok"/>
+                            <constraint firstItem="Pxt-7b-4is" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="ndj-Y2-CQG"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="background" destination="jSF-S8-OLa" id="J1n-XV-tem"/>
                         <outlet property="contentImage" destination="Pxt-7b-4is" id="A6D-he-l94"/>
-                        <outlet property="testImageView" destination="4rA-py-hul" id="vzI-3a-Aju"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

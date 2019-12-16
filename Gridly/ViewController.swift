@@ -11,14 +11,12 @@ import UIKit
 class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     let maskOverlayView = UIView()
-    var backgroundImageOffset = CGPoint()
+    var contentImageOffset = CGPoint()
     var squarePath = UIBezierPath()
     let gridLayer = CALayer()
     
     
     @IBOutlet weak var contentImage: UIImageView!
-    @IBOutlet weak var background: UIImageView!
-    @IBOutlet weak var testImageView: UIImageView!
     
     func createMask() {
         maskOverlayView.frame = self.view.frame
@@ -83,34 +81,49 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         self.view.layer.addSublayer(gridLayer)
     }
     
+    
+//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+//
+//        if gestureRecognizer is UITapGestureRecognizer || otherGestureRecognizer is UITapGestureRecognizer || gestureRecognizer is UIPanGestureRecognizer || otherGestureRecognizer is UIPanGestureRecognizer {
+//            return false
+//        }
+//        
+//        return true
+//    }
+    
+    
     @objc func changeImage(_ sender: Any) {
         print("Tapped!")
     }
     
+    
+    //  TODO: Flicker problem.
     @objc func moveImage(_ sender: UIPanGestureRecognizer) {
-        let translation = sender.translation(in: maskOverlayView.superview)
+        let translation = sender.translation(in: contentImage.superview)
         
         //  Saves the position of the background image before pan.
         if sender.state == .began {
-            backgroundImageOffset = contentImage.frame.origin
+            contentImageOffset = contentImage.frame.origin
         }
-        let position = CGPoint(x: translation.x + backgroundImageOffset.x - contentImage.frame.origin.x, y: translation.y + backgroundImageOffset.y - contentImage.frame.origin.y)
-        contentImage.transform = contentImage.transform.translatedBy(x: position.x, y: position.y)
         
-        print("Pan!")
+        let position = CGPoint(x: translation.x + contentImageOffset.x - contentImage.frame.origin.x,
+                               y: translation.y + contentImageOffset.y - contentImage.frame.origin.y)
+        
+        contentImage.transform = contentImage.transform.translatedBy(x: position.x, y: position.y)
     }
     
     @objc func rotateImage(_ sender: UIRotationGestureRecognizer) {
-        print("Rotating!")
+        contentImage.transform = contentImage.transform.rotated(by: sender.rotation)
+        sender.rotation = 0
     }
     
     @objc func scaleImage(_ sender: UIPinchGestureRecognizer) {
-        print("Scalling!")
+        contentImage.transform = contentImage.transform.scaledBy(x: sender.scale, y: sender.scale)
+        sender.scale = 1
     }
     
     
-    
-    func configure() {
+    func configureTapGestures() {
         maskOverlayView.isUserInteractionEnabled = true
         
         //  MARK: Tap Gesture
@@ -134,20 +147,20 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         pinchGestureRecognizer.delegate = self
     }
     
+    
     func bringViewsToTop() {
-        self.view.bringSubviewToFront(testImageView)
+        //self.view.bringSubviewToFront(testImageView)
     }
     
     override func viewDidLayoutSubviews() {
         createMask()
         drawGrid()
         bringViewsToTop()
-        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configure()
+        configureTapGestures()
     }
 
 }
