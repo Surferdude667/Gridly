@@ -10,39 +10,42 @@ import UIKit
 
 class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
-    let backgroundImage = UIView()
+    let maskOverlayView = UIView()
+    var backgroundImageOffset = CGPoint()
     var squarePath = UIBezierPath()
     let gridLayer = CALayer()
     
+    
+    @IBOutlet weak var contentImage: UIImageView!
     @IBOutlet weak var background: UIImageView!
     @IBOutlet weak var testImageView: UIImageView!
     
     func createMask() {
-        backgroundImage.frame = self.view.frame
-        backgroundImage.backgroundColor =  UIColor.white.withAlphaComponent(0.6)
-        self.view.addSubview(backgroundImage)
+        maskOverlayView.frame = self.view.frame
+        maskOverlayView.backgroundColor =  UIColor.white.withAlphaComponent(0.6)
+        self.view.addSubview(maskOverlayView)
         
         var squareSize = CGFloat()
         let maskLayer = CALayer()
         let squareLayer = CAShapeLayer()
         
         if UIDevice.current.orientation.isLandscape {
-            squareSize = self.backgroundImage.bounds.height - 50
+            squareSize = self.maskOverlayView.bounds.height - 50
         } else {
-            squareSize = self.backgroundImage.bounds.width - 50
+            squareSize = self.maskOverlayView.bounds.width - 50
         }
         
-        squareLayer.frame = CGRect(x: 0, y: 0, width: backgroundImage.frame.size.width, height: backgroundImage.frame.size.height)
+        squareLayer.frame = CGRect(x: 0, y: 0, width: maskOverlayView.frame.size.width, height: maskOverlayView.frame.size.height)
         
-        let overlay = UIBezierPath(rect: CGRect(x: 0, y: 0, width: backgroundImage.frame.size.width, height: backgroundImage.frame.size.height))
+        let overlay = UIBezierPath(rect: CGRect(x: 0, y: 0, width: maskOverlayView.frame.size.width, height: maskOverlayView.frame.size.height))
     
-        squarePath = UIBezierPath(rect: CGRect(x: backgroundImage.center.x - squareSize / 2, y: backgroundImage.center.y - squareSize / 2, width: squareSize, height: squareSize))
+        squarePath = UIBezierPath(rect: CGRect(x: maskOverlayView.center.x - squareSize / 2, y: maskOverlayView.center.y - squareSize / 2, width: squareSize, height: squareSize))
         
         overlay.append(squarePath.reversing())
         squareLayer.path = overlay.cgPath
         maskLayer.addSublayer(squareLayer)
         
-        backgroundImage.layer.mask = maskLayer
+        maskOverlayView.layer.mask = maskLayer
     }
     
     func drawGrid() {
@@ -84,12 +87,51 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         print("Tapped!")
     }
     
-    func configure() {
-        backgroundImage.isUserInteractionEnabled = true
+    @objc func moveImage(_ sender: UIPanGestureRecognizer) {
+        let translation = sender.translation(in: maskOverlayView.superview)
         
+        //  Saves the position of the background image before pan.
+        if sender.state == .began {
+            backgroundImageOffset = contentImage.frame.origin
+        }
+        let position = CGPoint(x: translation.x + backgroundImageOffset.x - contentImage.frame.origin.x, y: translation.y + backgroundImageOffset.y - contentImage.frame.origin.y)
+        contentImage.transform = contentImage.transform.translatedBy(x: position.x, y: position.y)
+        
+        print("Pan!")
+    }
+    
+    @objc func rotateImage(_ sender: UIRotationGestureRecognizer) {
+        print("Rotating!")
+    }
+    
+    @objc func scaleImage(_ sender: UIPinchGestureRecognizer) {
+        print("Scalling!")
+    }
+    
+    
+    
+    func configure() {
+        maskOverlayView.isUserInteractionEnabled = true
+        
+        //  MARK: Tap Gesture
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(changeImage(_:)))
-        backgroundImage.addGestureRecognizer(tapGestureRecognizer)
+        maskOverlayView.addGestureRecognizer(tapGestureRecognizer)
         tapGestureRecognizer.delegate = self
+        
+        //  MARK: Pan Gesture
+        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(moveImage(_:)))
+        maskOverlayView.addGestureRecognizer(panGestureRecognizer)
+        panGestureRecognizer.delegate = self
+        
+        // MARK: Rotation Gesture
+        let rotationGestureRecognizer = UIRotationGestureRecognizer(target: self, action: #selector(rotateImage(_:)))
+        maskOverlayView.addGestureRecognizer(rotationGestureRecognizer)
+        rotationGestureRecognizer.delegate = self
+        
+        //  MARK: Pinch Gesture
+        let pinchGestureRecognizer = UIPinchGestureRecognizer(target: self, action: #selector(scaleImage(_:)))
+        maskOverlayView.addGestureRecognizer(pinchGestureRecognizer)
+        pinchGestureRecognizer.delegate = self
     }
     
     func bringViewsToTop() {
