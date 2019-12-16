@@ -8,14 +8,15 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     let backgroundImage = UIView()
     var squarePath = UIBezierPath()
     let gridLayer = CALayer()
     
     @IBOutlet weak var background: UIImageView!
-        
+    @IBOutlet weak var testImageView: UIImageView!
+    
     func createMask() {
         backgroundImage.frame = self.view.frame
         backgroundImage.backgroundColor =  UIColor.white.withAlphaComponent(0.6)
@@ -42,7 +43,6 @@ class ViewController: UIViewController {
         maskLayer.addSublayer(squareLayer)
         
         backgroundImage.layer.mask = maskLayer
-        
     }
     
     func drawGrid() {
@@ -54,20 +54,19 @@ class ViewController: UIViewController {
         for _ in 0..<5 {
             let x = CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y + horizontalOffset)
             let y = CGPoint(x: squarePath.bounds.origin.x + squarePath.bounds.width, y: squarePath.bounds.origin.y + horizontalOffset)
-            addLine(fromPoint: x, toPoint: y)
+            drawLine(fromPoint: x, toPoint: y)
             horizontalOffset = horizontalOffset + offsetCalculation
         }
         
         for _ in 0..<5 {
             let x = CGPoint(x: squarePath.bounds.origin.x + verticalOffset, y: squarePath.bounds.origin.y)
             let y = CGPoint(x: squarePath.bounds.origin.x + verticalOffset, y: squarePath.bounds.origin.y + squarePath.bounds.width)
-            addLine(fromPoint: x, toPoint: y)
+            drawLine(fromPoint: x, toPoint: y)
             verticalOffset = verticalOffset + offsetCalculation
         }
     }
     
-    
-    func addLine(fromPoint start: CGPoint, toPoint end:CGPoint) {
+    func drawLine(fromPoint start: CGPoint, toPoint end:CGPoint) {
         let line = CAShapeLayer()
         let linePath = UIBezierPath()
         linePath.move(to: start)
@@ -80,16 +79,33 @@ class ViewController: UIViewController {
         gridLayer.addSublayer(line)
         self.view.layer.addSublayer(gridLayer)
     }
+    
+    @objc func changeImage(_ sender: Any) {
+        print("Tapped!")
+    }
+    
+    func configure() {
+        backgroundImage.isUserInteractionEnabled = true
         
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(changeImage(_:)))
+        backgroundImage.addGestureRecognizer(tapGestureRecognizer)
+        tapGestureRecognizer.delegate = self
+    }
+    
+    func bringViewsToTop() {
+        self.view.bringSubviewToFront(testImageView)
+    }
     
     override func viewDidLayoutSubviews() {
-        print("Called")
         createMask()
         drawGrid()
+        bringViewsToTop()
+        
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configure()
     }
 
 }
