@@ -15,8 +15,8 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     var squarePath = UIBezierPath()
     let gridLayer = CALayer()
     
-    
     @IBOutlet weak var contentImage: UIImageView!
+    @IBOutlet weak var testImage: UIImageView!
     
     func createMask() {
         maskOverlayView.frame = self.view.frame
@@ -36,7 +36,7 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         squareLayer.frame = CGRect(x: 0, y: 0, width: maskOverlayView.frame.size.width, height: maskOverlayView.frame.size.height)
         
         let overlay = UIBezierPath(rect: CGRect(x: 0, y: 0, width: maskOverlayView.frame.size.width, height: maskOverlayView.frame.size.height))
-    
+        
         squarePath = UIBezierPath(rect: CGRect(x: maskOverlayView.center.x - squareSize / 2, y: maskOverlayView.center.y - squareSize / 2, width: squareSize, height: squareSize))
         
         overlay.append(squarePath.reversing())
@@ -82,22 +82,23 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     
-//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-//
-//        if gestureRecognizer is UITapGestureRecognizer || otherGestureRecognizer is UITapGestureRecognizer || gestureRecognizer is UIPanGestureRecognizer || otherGestureRecognizer is UIPanGestureRecognizer {
-//            return false
-//        }
-//        
-//        return true
-//    }
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer is UITapGestureRecognizer || otherGestureRecognizer is UITapGestureRecognizer || gestureRecognizer is UIPanGestureRecognizer || otherGestureRecognizer is UIPanGestureRecognizer {
+            return false
+        }
+        return true
+    }
     
     
     @objc func changeImage(_ sender: Any) {
         print("Tapped!")
+        let image = renderPuzzleImage()
+        
+        testImage.image = image
     }
     
     
-    //  TODO: Flicker problem.
+    //  TODO: Flicker problem on to much zoom.
     @objc func moveImage(_ sender: UIPanGestureRecognizer) {
         let translation = sender.translation(in: contentImage.superview)
         
@@ -106,17 +107,18 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             contentImageOffset = contentImage.frame.origin
         }
         
-        let position = CGPoint(x: translation.x + contentImageOffset.x - contentImage.frame.origin.x,
-                               y: translation.y + contentImageOffset.y - contentImage.frame.origin.y)
+        let position = CGPoint(x: translation.x + contentImageOffset.x - contentImage.frame.origin.x, y: translation.y + contentImageOffset.y - contentImage.frame.origin.y)
         
         contentImage.transform = contentImage.transform.translatedBy(x: position.x, y: position.y)
     }
     
+    //  TODO: Rotates from the middle now...
     @objc func rotateImage(_ sender: UIRotationGestureRecognizer) {
         contentImage.transform = contentImage.transform.rotated(by: sender.rotation)
         sender.rotation = 0
     }
     
+    //  TODO: Scales from the middle of image now...
     @objc func scaleImage(_ sender: UIPinchGestureRecognizer) {
         contentImage.transform = contentImage.transform.scaledBy(x: sender.scale, y: sender.scale)
         sender.scale = 1
@@ -149,7 +151,18 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func bringViewsToTop() {
-        //self.view.bringSubviewToFront(testImageView)
+        self.view.bringSubviewToFront(testImage)
+    }
+    
+    
+    func renderPuzzleImage() -> UIImage {
+        let renderer = UIGraphicsImageRenderer(bounds: squarePath.bounds)
+        let image = renderer.image { (context) in
+            gridLayer.isHidden = true
+            view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
+        }
+        gridLayer.isHidden = false
+        return image
     }
     
     override func viewDidLayoutSubviews() {
@@ -162,6 +175,13 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         super.viewDidLoad()
         configureTapGestures()
     }
-
+    
 }
 
+
+//  Notes for puzzle.
+//  Silice image.
+//  Create Arry of tiles.
+//  Another class for the tiles.
+//  3 proper - Orignal tile location, CGPoint. Tile grid location, Int. Is tile placed correct, Bool.
+//  Check when finger is lifted if CGPoint is close to target.
