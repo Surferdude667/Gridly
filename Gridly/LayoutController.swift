@@ -15,8 +15,33 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     var squarePath = UIBezierPath()
     let gridLayer = CALayer()
     
+    var puzzleImage: UIImage!
+    var puzzleTiles = [Tile]()
+    
+    
     @IBOutlet weak var contentImage: UIImageView!
     @IBOutlet weak var testImage: UIImageView!
+    
+    
+    
+    @IBOutlet weak var p1: UIImageView!
+    @IBOutlet weak var p2: UIImageView!
+    @IBOutlet weak var p3: UIImageView!
+    @IBOutlet weak var p4: UIImageView!
+    @IBOutlet weak var p5: UIImageView!
+    @IBOutlet weak var p6: UIImageView!
+    @IBOutlet weak var p7: UIImageView!
+    @IBOutlet weak var p8: UIImageView!
+    @IBOutlet weak var p9: UIImageView!
+    @IBOutlet weak var p10: UIImageView!
+    @IBOutlet weak var p11: UIImageView!
+    @IBOutlet weak var p12: UIImageView!
+    @IBOutlet weak var p13: UIImageView!
+    @IBOutlet weak var p14: UIImageView!
+    @IBOutlet weak var p15: UIImageView!
+    @IBOutlet weak var p16: UIImageView!
+    
+    
     
     func createMask() {
         maskOverlayView.frame = self.view.frame
@@ -81,7 +106,6 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
         self.view.layer.addSublayer(gridLayer)
     }
     
-    
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer is UITapGestureRecognizer || otherGestureRecognizer is UITapGestureRecognizer || gestureRecognizer is UIPanGestureRecognizer || otherGestureRecognizer is UIPanGestureRecognizer {
             return false
@@ -90,11 +114,12 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     
+    
     @objc func changeImage(_ sender: Any) {
         print("Tapped!")
         let image = renderPuzzleImage()
-        
         testImage.image = image
+        renderPuzzleTiles()
     }
     
     
@@ -161,9 +186,58 @@ class ViewController: UIViewController, UIGestureRecognizerDelegate {
             gridLayer.isHidden = true
             view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
         }
+        
         gridLayer.isHidden = false
         return image
     }
+    
+    
+    func renderPuzzleTiles() {
+        var tileId = 0
+        var yOffset: CGFloat = 0.0
+        var xOffset: CGFloat = 0.0
+        let offsetCalculation = squarePath.bounds.width / 4
+        
+        for _ in 0..<4 {
+            for _ in 0..<4 {
+                tileId += 1
+                
+                let tileSize = CGRect(x: squarePath.bounds.origin.x + xOffset, y: squarePath.bounds.origin.y + yOffset, width: squarePath.bounds.width / 4, height: squarePath.bounds.height / 4)
+                let tileRendere = UIGraphicsImageRenderer(bounds: tileSize)
+                
+                let tile = tileRendere.image { (contex) in
+                    view.drawHierarchy(in: view.bounds, afterScreenUpdates: false)
+                }
+                xOffset += offsetCalculation
+                puzzleTiles.append(Tile(id: tileId, tileImage: tile))
+            }
+            xOffset = 0.0
+            yOffset += offsetCalculation
+        }
+        setLabels()
+        
+        print(puzzleTiles)
+    }
+    
+    func setLabels() {
+        p1.image = puzzleTiles[0].tileImage
+        p2.image = puzzleTiles[1].tileImage
+        p3.image = puzzleTiles[2].tileImage
+        p4.image = puzzleTiles[3].tileImage
+        p5.image = puzzleTiles[4].tileImage
+        p6.image = puzzleTiles[5].tileImage
+        p7.image = puzzleTiles[6].tileImage
+        p8.image = puzzleTiles[7].tileImage
+        p9.image = puzzleTiles[8].tileImage
+        p10.image = puzzleTiles[9].tileImage
+        p11.image = puzzleTiles[10].tileImage
+        p12.image = puzzleTiles[11].tileImage
+        p13.image = puzzleTiles[12].tileImage
+        p14.image = puzzleTiles[13].tileImage
+        p15.image = puzzleTiles[14].tileImage
+        p16.image = puzzleTiles[15].tileImage
+    }
+    
     
     override func viewDidLayoutSubviews() {
         createMask()
