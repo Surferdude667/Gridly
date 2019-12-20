@@ -10,13 +10,22 @@ import UIKit
 
 class GameController: UIViewController {
 
+    @IBOutlet weak var image1: UIImageView!
+    @IBOutlet weak var place1: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        checkIntercetion()
     }
     
     
-    
-    
+    //  Check which place it's closest to and need to check.
+    func checkIntercetion() {
+        if image1.frame.intersects(place1.frame) {
+            print("They touch!")
+        } else {
+            print("They don't touch!")
+        }
+    }
 
 }

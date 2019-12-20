@@ -13,14 +13,11 @@ class Tile {
     let id: Int
     let tileImage: UIImage
     
+    static var image: UIImage?
+    static var pieces = [Tile]()
+    
     init(id: Int, tileImage: UIImage) {
         self.id = id
         self.tileImage = tileImage
     }
-    
-//    static func splitImageToTiles(image: UIImage) -> [Tile] {
-//        
-//        
-//    }
-    
 }
