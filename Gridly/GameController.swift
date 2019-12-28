@@ -9,7 +9,7 @@
 import UIKit
 
 class GameController: UIViewController {
-
+    
     @IBOutlet var tiles: [UIImageView]!
     @IBOutlet var positions: [UIImageView]!
     
@@ -22,32 +22,13 @@ class GameController: UIViewController {
         for i in 0..<tiles.count {
             tiles[i].image = Tile.pieces[i].tileImage
             tiles[i].tag = Tile.pieces[i].id
+            Tile.pieces[i].originalPosition = tiles[i].frame.origin
         }
     }
-    
-    
-    
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configure()
-        
-        
-        checkIntercetion()
-        //let check = distance(image1.frame.origin, place1.frame.origin)
-        //print(check)
-    }
-    
-
-    
-    
-    func checkIntercetion() {
-//        if image1.frame.intersects(place1.frame) {
-//            print("They touch!")
-//        } else {
-//            print("They don't touch!")
-//        }
     }
     
     func calculateDistance(_ a: CGPoint, _ b: CGPoint) -> CGFloat {
@@ -55,7 +36,30 @@ class GameController: UIViewController {
         let yDist = a.y - b.y
         return CGFloat(sqrt(xDist * xDist + yDist * yDist))
     }
-
+    
+    func moveView(view: UIImageView, position: CGPoint) {
+        UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: [], animations: {
+            view.frame.origin = position
+        }) { (success) in
+            print("Done animating!")
+        }
+    }
+    
+    func validatePlacement(viewID: Int, positionID: Int?) {
+        if viewID == positionID {
+            print("Correctley placed!")
+            moveView(view: tiles[viewID], position: positions[positionID!].frame.origin)
+        } else {
+            if positionID != nil {
+                print("Wrong placed!")
+                moveView(view: tiles[viewID], position: positions[positionID!].frame.origin)
+            } else {
+                print("Nil!")
+                moveView(view: tiles[viewID], position: Tile.pieces[viewID].originalPosition!)
+            }
+        }
+    }
+    
     
     @IBAction func handlePan(_ recognizer: UIPanGestureRecognizer) {
         guard let recognizerView = recognizer.view else {
@@ -72,7 +76,7 @@ class GameController: UIViewController {
         for position in positions {
             let tileDistance = calculateDistance(recognizerView.frame.origin, position.frame.origin)
             
-            if 0...15 ~= tileDistance {
+            if 0...20 ~= tileDistance {
                 position.backgroundColor = UIColor.black
                 positionID = positions.firstIndex(of: position)
             } else {
@@ -80,22 +84,8 @@ class GameController: UIViewController {
             }
         }
         
-//        func bringViewsToTop() {
-//            self.view.bringSubviewToFront(positions)
-//        }
-        
         if recognizer.state == .ended {
-            //print("Ended!")
-            print("Position: \(positionID!)")
-            
-            if recognizerView.tag == positionID {
-                print("Correctley placed!")
-            } else {
-                print("Wrong!")
-            }
-            
+            validatePlacement(viewID: recognizerView.tag, positionID: positionID)
         }
-        
     }
-    
 }

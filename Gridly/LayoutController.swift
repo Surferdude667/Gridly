@@ -184,7 +184,7 @@ class LayoutController: UIViewController, UIGestureRecognizerDelegate {
                     view.drawHierarchy(in: view.bounds, afterScreenUpdates: false)
                 }
     
-                Tile.pieces.append(Tile(id: tileId, tileImage: tile))
+                Tile.pieces.append(Tile(id: tileId, tileImage: tile, originalPosition: nil))
                 xOffset += offsetCalculation
                 tileId += 1
             }
@@ -196,7 +196,6 @@ class LayoutController: UIViewController, UIGestureRecognizerDelegate {
     override func viewDidLayoutSubviews() {
         createMask()
         drawGrid()
-        bringViewsToTop()
     }
     
     override func viewDidLoad() {

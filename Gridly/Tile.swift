@@ -12,12 +12,14 @@ import UIKit
 class Tile {
     let id: Int
     let tileImage: UIImage
+    var originalPosition: CGPoint?
     
     static var image: UIImage?
     static var pieces = [Tile]()
     
-    init(id: Int, tileImage: UIImage) {
+    init(id: Int, tileImage: UIImage, originalPosition: CGPoint?) {
         self.id = id
         self.tileImage = tileImage
+        self.originalPosition = originalPosition
     }
 }
