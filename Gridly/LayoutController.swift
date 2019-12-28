@@ -18,8 +18,9 @@ class LayoutController: UIViewController, UIGestureRecognizerDelegate {
     @IBOutlet weak var contentImage: UIImageView!
     @IBOutlet weak var blurView: UIVisualEffectView!
     
-    @IBOutlet var positions: [UIImageView]!
-    @IBOutlet var tiles: [UIImageView]!
+    @IBOutlet var puzzleDestinations: [UIImageView]!
+    @IBOutlet var puzzleTiles: [UIImageView]!
+    @IBOutlet var puzzlePositions: [UIImageView]!
     
     func setup() {
         blurView.effect = nil
@@ -37,9 +38,9 @@ class LayoutController: UIViewController, UIGestureRecognizerDelegate {
         let squareLayer = CAShapeLayer()
         
         if UIDevice.current.orientation.isLandscape {
-            squareSize = self.maskOverlayView.bounds.height - 50
+            squareSize = maskOverlayView.bounds.height - 50
         } else {
-            squareSize = self.maskOverlayView.bounds.width - 50
+            squareSize = maskOverlayView.bounds.width - 50
         }
         
         squareLayer.frame = CGRect(x: 0, y: 0, width: maskOverlayView.frame.size.width, height: maskOverlayView.frame.size.height)
@@ -102,9 +103,14 @@ class LayoutController: UIViewController, UIGestureRecognizerDelegate {
     @objc func changeImage(_ sender: Any) {
         renderPuzzleImage()
         renderPuzzleTiles()
-        movePuzzle()
+        
         configure()
         bringViewsToTop()
+        
+        fitViews(startPosition: CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y), views: puzzleTiles, offset: squarePath.bounds.width / 4, animated: false)
+        
+        animateTilesToPlace()
+        
         //performSegue(withIdentifier: "gameSegue", sender: self)
     }
     
@@ -162,7 +168,7 @@ class LayoutController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func bringViewsToTop() {
-        self.view.bringSubviewToFront(positions[0])
+        //self.view.bringSubviewToFront(puzzleDestinations[0])
     }
     
     
@@ -217,6 +223,7 @@ class LayoutController: UIViewController, UIGestureRecognizerDelegate {
         createMask()
         drawGrid()
         bringViewsToTop()
+        fitViews(startPosition: CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y - 200.0), views: puzzleDestinations, offset: squarePath.bounds.width / 4, animated: false)
     }
     
     override func viewDidLoad() {
@@ -228,16 +235,18 @@ class LayoutController: UIViewController, UIGestureRecognizerDelegate {
     //  ------------ FROM GAME VIEWCONTROLLER
     
     func configure() {
-        tiles.shuffle()
+        
+        //puzzleDestinations.shuffle()
         addTilesToViews()
-        //fitViews()
+        
     }
     
     func addTilesToViews() {
-        for i in 0..<tiles.count {
-            tiles[i].image = Tile.pieces[i].tileImage
-            tiles[i].tag = Tile.pieces[i].id
-            Tile.pieces[i].originalPosition = tiles[i].frame.origin
+        puzzlePositions.shuffle()
+        for i in 0..<puzzleTiles.count {
+            puzzleTiles[i].image = Tile.pieces[i].tileImage
+            puzzleTiles[i].tag = Tile.pieces[i].id
+            Tile.pieces[i].originalPosition = puzzlePositions[i].frame.origin
         }
     }
     
@@ -256,52 +265,77 @@ class LayoutController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    func fitViews() {
+    
+
+    
+    func fitViews(startPosition: CGPoint, views: [UIImageView], offset: CGFloat, animated: Bool) {
         var yOffset: CGFloat = 0.0
         var xOffset: CGFloat = 0.0
-        let offsetCalculation = view.bounds.width / 4
-        var counter = 0
-        
-        let startPosition = CGPoint(x: 0.0, y: 0.0)
-        
+        var i = 0
         
         for _ in 0..<4 {
             for _ in 0..<4 {
-                let positionSize = CGRect(x: startPosition.x + xOffset, y: startPosition.y + yOffset, width: view.bounds.width / 4, height: view.bounds.width / 4)
                 
-                positions[counter].frame = positionSize
+                let position = CGRect(x: startPosition.x + xOffset, y: startPosition.y + yOffset, width: offset, height: offset)
                 
-                xOffset += offsetCalculation
-                counter += 1
+                if animated {
+                    UIView.animate(withDuration: 1.0) {
+                        views[i].frame = position
+                    }
+                } else {
+                    views[i].frame = position
+                }
+                
+                xOffset += offset
+                i += 1
             }
             xOffset = 0.0
-            yOffset += offsetCalculation
+            yOffset += offset
         }
+    }
+    
+    func animateTilesToPlace() {
+        
+        for i in 0..<puzzleTiles.count {
+            
+            UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1.5, options: [], animations: {
+                self.puzzleTiles[i].bounds.size = self.puzzlePositions[i].bounds.size
+                self.moveView(view: self.puzzleTiles[i], position: self.puzzlePositions[i].frame.origin)
+            }) { (success) in
+                print("Done animating!")
+                self.movePuzzle()
+            }
+            
+
+        }
+        
     }
     
     
     func validatePlacement(viewID: Int, positionID: Int?) {
         //  Tile placed correctley
         if viewID == positionID {
-            moveView(view: tiles[viewID], position: positions[positionID!].frame.origin)
+            moveView(view: puzzleTiles[viewID], position: puzzleDestinations[positionID!].frame.origin)
             print("Correct!")
         } else {
             //  Tile placed wrong
             if positionID != nil {
                 print("Wrong!")
-                moveView(view: tiles[viewID], position: positions[positionID!].frame.origin)
+                
+                moveView(view: puzzleTiles[viewID], position: puzzleDestinations[positionID!].frame.origin)
             } else {
                 //  Tile is not placed near any position
                 print("Outside")
                 if let originalPostion = Tile.pieces[viewID].originalPosition {
-                    moveView(view: tiles[viewID], position: originalPostion)
+                    puzzleTiles[viewID].bounds.size = puzzlePositions[0].bounds.size
+                    moveView(view: puzzleTiles[viewID], position: originalPostion)
                 }
             }
         }
     }
     
     
-    @IBAction func handlePan(_ recognizer: UIPanGestureRecognizer) {
+    @IBAction func moveTileWithPan(_ recognizer: UIPanGestureRecognizer) {
         guard let recognizerView = recognizer.view else {
             return
         }
@@ -313,20 +347,31 @@ class LayoutController: UIViewController, UIGestureRecognizerDelegate {
         
         var positionID: Int?
         
-        for position in positions {
+        for position in puzzleDestinations {
             let tileDistance = calculateDistance(recognizerView.frame.origin, position.frame.origin)
             
             if 0...20 ~= tileDistance {
-                position.backgroundColor = UIColor.black
-                positionID = positions.firstIndex(of: position)
+                position.backgroundColor = UIColor.white
+                position.alpha = 0.8
+                positionID = puzzleDestinations.firstIndex(of: position)
             } else {
-                position.backgroundColor = UIColor.gray
+                position.backgroundColor = UIColor.black
+                position.alpha = 0.5
             }
         }
         
+        //  TODO: Make a generic variable for squarePath.bounds.width / 4 etc.
+        //  TODO: Make switch
         if recognizer.state == .ended {
             validatePlacement(viewID: recognizerView.tag, positionID: positionID)
         }
+        
+        if recognizer.state == .began {
+            UIView.animate(withDuration: 0.4) {
+                recognizerView.bounds.size = CGSize(width: self.squarePath.bounds.width / 4, height: self.squarePath.bounds.height / 4)
+            }
+        }
+        
     }
     
     
