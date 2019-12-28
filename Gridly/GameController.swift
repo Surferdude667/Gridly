@@ -16,6 +16,7 @@ class GameController: UIViewController {
     func configure() {
         tiles.shuffle()
         addTilesToViews()
+        fitViews()
     }
     
     func addTilesToViews() {
@@ -45,17 +46,43 @@ class GameController: UIViewController {
         }
     }
     
+    func fitViews() {
+        var yOffset: CGFloat = 0.0
+        var xOffset: CGFloat = 0.0
+        let offsetCalculation = view.bounds.width / 4
+        var counter = 0
+        
+        let startPosition = CGPoint(x: 0.0, y: 0.0)
+        
+        
+        for _ in 0..<4 {
+            for _ in 0..<4 {
+                let positionSize = CGRect(x: startPosition.x + xOffset, y: startPosition.y + yOffset, width: view.bounds.width / 4, height: view.bounds.width / 4)
+                
+                positions[counter].frame = positionSize
+                
+                xOffset += offsetCalculation
+                counter += 1
+            }
+            xOffset = 0.0
+            yOffset += offsetCalculation
+        }
+    }
+    
+    
     func validatePlacement(viewID: Int, positionID: Int?) {
+        //  Tile placed correctley
         if viewID == positionID {
-            print("Correctley placed!")
             moveView(view: tiles[viewID], position: positions[positionID!].frame.origin)
         } else {
+            //  Tile placed wrong
             if positionID != nil {
-                print("Wrong placed!")
                 moveView(view: tiles[viewID], position: positions[positionID!].frame.origin)
             } else {
-                print("Nil!")
-                moveView(view: tiles[viewID], position: Tile.pieces[viewID].originalPosition!)
+                //  Tile is not placed near any position
+                if let originalPostion = Tile.pieces[viewID].originalPosition {
+                    moveView(view: tiles[viewID], position: originalPostion)
+                }
             }
         }
     }

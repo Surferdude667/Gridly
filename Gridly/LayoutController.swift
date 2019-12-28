@@ -16,8 +16,13 @@ class LayoutController: UIViewController, UIGestureRecognizerDelegate {
     let gridLayer = CALayer()
     
     @IBOutlet weak var contentImage: UIImageView!
+    @IBOutlet weak var blurView: UIVisualEffectView!
+    
+    @IBOutlet var positions: [UIImageView]!
+    @IBOutlet var tiles: [UIImageView]!
     
     func setup() {
+        blurView.effect = nil
         Tile.pieces.removeAll()
         configureTapGestures()
     }
@@ -97,7 +102,10 @@ class LayoutController: UIViewController, UIGestureRecognizerDelegate {
     @objc func changeImage(_ sender: Any) {
         renderPuzzleImage()
         renderPuzzleTiles()
-        performSegue(withIdentifier: "gameSegue", sender: self)
+        movePuzzle()
+        configure()
+        bringViewsToTop()
+        //performSegue(withIdentifier: "gameSegue", sender: self)
     }
     
     
@@ -154,7 +162,7 @@ class LayoutController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func bringViewsToTop() {
-        //self.view.bringSubviewToFront(testImage)
+        self.view.bringSubviewToFront(positions[0])
     }
     
     
@@ -193,14 +201,133 @@ class LayoutController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+
+    
+    func movePuzzle() {
+        UIView.animate(withDuration: 1.0) {
+            self.blurView.effect = UIBlurEffect(style: UIBlurEffect.Style.dark)
+            self.maskOverlayView.isHidden = true
+            self.gridLayer.frame.origin = CGPoint(x: 0.0, y: -200.0)
+            self.gridLayer.opacity = 0.4
+            print(self.gridLayer.frame.width)
+        }
+    }
+    
     override func viewDidLayoutSubviews() {
         createMask()
         drawGrid()
+        bringViewsToTop()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        
     }
+    
+    //  ------------ FROM GAME VIEWCONTROLLER
+    
+    func configure() {
+        tiles.shuffle()
+        addTilesToViews()
+        //fitViews()
+    }
+    
+    func addTilesToViews() {
+        for i in 0..<tiles.count {
+            tiles[i].image = Tile.pieces[i].tileImage
+            tiles[i].tag = Tile.pieces[i].id
+            Tile.pieces[i].originalPosition = tiles[i].frame.origin
+        }
+    }
+    
+    
+    func calculateDistance(_ a: CGPoint, _ b: CGPoint) -> CGFloat {
+        let xDist = a.x - b.x
+        let yDist = a.y - b.y
+        return CGFloat(sqrt(xDist * xDist + yDist * yDist))
+    }
+    
+    func moveView(view: UIImageView, position: CGPoint) {
+        UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: [], animations: {
+            view.frame.origin = position
+        }) { (success) in
+            print("Done animating!")
+        }
+    }
+    
+    func fitViews() {
+        var yOffset: CGFloat = 0.0
+        var xOffset: CGFloat = 0.0
+        let offsetCalculation = view.bounds.width / 4
+        var counter = 0
+        
+        let startPosition = CGPoint(x: 0.0, y: 0.0)
+        
+        
+        for _ in 0..<4 {
+            for _ in 0..<4 {
+                let positionSize = CGRect(x: startPosition.x + xOffset, y: startPosition.y + yOffset, width: view.bounds.width / 4, height: view.bounds.width / 4)
+                
+                positions[counter].frame = positionSize
+                
+                xOffset += offsetCalculation
+                counter += 1
+            }
+            xOffset = 0.0
+            yOffset += offsetCalculation
+        }
+    }
+    
+    
+    func validatePlacement(viewID: Int, positionID: Int?) {
+        //  Tile placed correctley
+        if viewID == positionID {
+            moveView(view: tiles[viewID], position: positions[positionID!].frame.origin)
+            print("Correct!")
+        } else {
+            //  Tile placed wrong
+            if positionID != nil {
+                print("Wrong!")
+                moveView(view: tiles[viewID], position: positions[positionID!].frame.origin)
+            } else {
+                //  Tile is not placed near any position
+                print("Outside")
+                if let originalPostion = Tile.pieces[viewID].originalPosition {
+                    moveView(view: tiles[viewID], position: originalPostion)
+                }
+            }
+        }
+    }
+    
+    
+    @IBAction func handlePan(_ recognizer: UIPanGestureRecognizer) {
+        guard let recognizerView = recognizer.view else {
+            return
+        }
+        
+        let translation = recognizer.translation(in: view)
+        recognizerView.center.x += translation.x
+        recognizerView.center.y += translation.y
+        recognizer.setTranslation(.zero, in: view)
+        
+        var positionID: Int?
+        
+        for position in positions {
+            let tileDistance = calculateDistance(recognizerView.frame.origin, position.frame.origin)
+            
+            if 0...20 ~= tileDistance {
+                position.backgroundColor = UIColor.black
+                positionID = positions.firstIndex(of: position)
+            } else {
+                position.backgroundColor = UIColor.gray
+            }
+        }
+        
+        if recognizer.state == .ended {
+            validatePlacement(viewID: recognizerView.tag, positionID: positionID)
+        }
+    }
+    
     
 }
