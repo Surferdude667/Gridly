@@ -168,7 +168,9 @@ class LayoutController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func bringViewsToTop() {
-        //self.view.bringSubviewToFront(puzzleDestinations[0])
+        for i in 0..<puzzlePositions.count {
+            self.view.bringSubviewToFront(puzzlePositions[i])
+        }
     }
     
     
@@ -210,13 +212,19 @@ class LayoutController: UIViewController, UIGestureRecognizerDelegate {
 
     
     func movePuzzle() {
-        UIView.animate(withDuration: 1.0) {
-            self.blurView.effect = UIBlurEffect(style: UIBlurEffect.Style.dark)
-            self.maskOverlayView.isHidden = true
+        
+        UIView.animate(withDuration: 1.5, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.5, options: [], animations: {
+            self.gridLayer.opacity = 0.5
             self.gridLayer.frame.origin = CGPoint(x: 0.0, y: -200.0)
-            self.gridLayer.opacity = 0.4
-            print(self.gridLayer.frame.width)
+            self.blurView.effect = UIBlurEffect(style: UIBlurEffect.Style.dark)
+            self.maskOverlayView.alpha = 0.0
+            
+        }) { (success) in
+            print("Done animating!")
+            self.maskOverlayView.isHidden = true
         }
+        
+        
     }
     
     override func viewDidLayoutSubviews() {
@@ -295,20 +303,19 @@ class LayoutController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func animateTilesToPlace() {
-        
         for i in 0..<puzzleTiles.count {
-            
-            UIView.animate(withDuration: 1.0, delay: 0.0, usingSpringWithDamping: 0.8, initialSpringVelocity: 1.5, options: [], animations: {
+            UIView.animate(withDuration: 1.5, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 2.0, options: [], animations: {
                 self.puzzleTiles[i].bounds.size = self.puzzlePositions[i].bounds.size
                 self.moveView(view: self.puzzleTiles[i], position: self.puzzlePositions[i].frame.origin)
+                
             }) { (success) in
                 print("Done animating!")
-                self.movePuzzle()
+                
             }
             
-
+            
         }
-        
+        self.movePuzzle()
     }
     
     
@@ -350,7 +357,7 @@ class LayoutController: UIViewController, UIGestureRecognizerDelegate {
         for position in puzzleDestinations {
             let tileDistance = calculateDistance(recognizerView.frame.origin, position.frame.origin)
             
-            if 0...20 ~= tileDistance {
+            if 0...40 ~= tileDistance {
                 position.backgroundColor = UIColor.white
                 position.alpha = 0.8
                 positionID = puzzleDestinations.firstIndex(of: position)
@@ -373,6 +380,5 @@ class LayoutController: UIViewController, UIGestureRecognizerDelegate {
         }
         
     }
-    
     
 }
