@@ -19,12 +19,24 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     @IBOutlet weak var blurView: UIVisualEffectView!
     @IBOutlet var puzzleDestinations: [UIImageView]!
     @IBOutlet var puzzleTiles: [UIImageView]!
-    @IBOutlet var puzzlePositions: [UIImageView]!
+    @IBOutlet var puzzleStacks: [UIImageView]!
     
     func configure() {
         blurView.effect = nil
         Tile.pieces.removeAll()
         configureTapGestures()
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        configure()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        createMask()
+        drawGrid()
+        bringViewsToTop()
+        updateViewPositions()
     }
     
     func createMask() {
@@ -36,10 +48,15 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         let maskLayer = CALayer()
         let squareLayer = CAShapeLayer()
         
+        //  Check device and orintation to adjust mask size
         if UIDevice.current.orientation.isLandscape {
             squareSize = maskOverlayView.bounds.height - 50
         } else {
-            squareSize = maskOverlayView.bounds.width - 50
+            if UIDevice.current.userInterfaceIdiom == .pad {
+                squareSize = maskOverlayView.bounds.width - 150
+            } else {
+                squareSize = maskOverlayView.bounds.width - 50
+            }
         }
         
         squareLayer.frame = CGRect(x: 0, y: 0, width: maskOverlayView.frame.size.width, height: maskOverlayView.frame.size.height)
@@ -100,16 +117,13 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     
     
     @objc func createPuzzle(_ sender: Any) {
+        print("Loading...")
         renderPuzzleImage()
         renderPuzzleTiles()
         addTilesToViews()
-        bringViewsToTop()
         
-        fitViews(startPosition: CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y), views: puzzleTiles, offset: squarePath.bounds.width / 4, animated: false)
-        
-        animateTilesToPlace()
-        
-        //performSegue(withIdentifier: "gameSegue", sender: self)
+        fitViews(views: puzzleTiles, startPosition: CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y), offset: squarePath.bounds.width / 4)
+        animateTilesToStack()
     }
     
     
@@ -166,8 +180,8 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func bringViewsToTop() {
-        for i in 0..<puzzlePositions.count {
-            self.view.bringSubviewToFront(puzzlePositions[i])
+        for i in 0..<puzzleStacks.count {
+            self.view.bringSubviewToFront(puzzleStacks[i])
         }
     }
     
@@ -210,20 +224,16 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func movePuzzle() {
-        
         UIView.animate(withDuration: 1.5, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.5, options: [], animations: {
             self.maskOverlayView.alpha = 0.0
             self.gridLayer.opacity = 0.0
         }) { (success) in
-            print("Done animating!")
-            
             UIView.animate(withDuration: 1.0) {
-                
                 self.blurView.effect = UIBlurEffect(style: UIBlurEffect.Style.dark)
                 self.gridLayer.opacity = 0.5
-                //  TODO: -200 constant needs to be dynamic
-                self.gridLayer.frame.origin = CGPoint(x: 0.0, y: -150.0)
                 
+                //self.gridLayer.frame.origin = CGPoint(x: 0.0, y: 0.0)
+                self.gridLayer.frame.origin = CGPoint(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y)
                 self.maskOverlayView.isHidden = true
                 
                 for element in self.puzzleDestinations {
@@ -232,34 +242,14 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
                 }
             }
         }
-        
-        
     }
-    
-    override func viewDidLayoutSubviews() {
-        createMask()
-        drawGrid()
-        bringViewsToTop()
-        fitViews(startPosition: CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y - 150.0), views: puzzleDestinations, offset: squarePath.bounds.width / 4, animated: false)
-        updateCorrectTilePositions()
         
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        configure()
-        
-    }
-    
-    //  ------------ FROM GAME VIEWCONTROLLER
-    
-    
     func addTilesToViews() {
-        puzzlePositions.shuffle()
+        puzzleStacks.shuffle()
         for i in 0..<puzzleTiles.count {
             puzzleTiles[i].image = Tile.pieces[i].tileImage
             puzzleTiles[i].tag = Tile.pieces[i].id
-            Tile.pieces[i].originalPosition = puzzlePositions[i].frame.origin
+            Tile.pieces[i].originalPosition = puzzleStacks[i].frame.origin
         }
     }
     
@@ -270,34 +260,21 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         return CGFloat(sqrt(xDist * xDist + yDist * yDist))
     }
     
-    func moveView(view: UIImageView, position: CGPoint) {
+    func moveView(view: UIImageView, to newPostion: CGPoint) {
         UIView.animate(withDuration: 0.4, delay: 0.0, usingSpringWithDamping: 0.5, initialSpringVelocity: 0.5, options: [], animations: {
-            view.frame.origin = position
-        }) { (success) in
-            print("Done animating!")
-        }
+            view.frame.origin = newPostion
+        })
     }
     
-    
-    
-    
-    func fitViews(startPosition: CGPoint, views: [UIImageView], offset: CGFloat, animated: Bool) {
+    func fitViews(views: [UIImageView], startPosition: CGPoint, offset: CGFloat) {
         var yOffset: CGFloat = 0.0
         var xOffset: CGFloat = 0.0
         var i = 0
         
         for _ in 0..<4 {
             for _ in 0..<4 {
-                
                 let position = CGRect(x: startPosition.x + xOffset, y: startPosition.y + yOffset, width: offset, height: offset)
-                
-                if animated {
-                    UIView.animate(withDuration: 1.0) {
-                        views[i].frame = position
-                    }
-                } else {
-                    views[i].frame = position
-                }
+                views[i].frame = position
                 
                 xOffset += offset
                 i += 1
@@ -307,18 +284,13 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    func animateTilesToPlace() {
+    func animateTilesToStack() {
+        print("Loading completed!")
         for i in 0..<puzzleTiles.count {
             UIView.animate(withDuration: 1.5, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 2.0, options: [], animations: {
-                self.puzzleTiles[i].bounds.size = self.puzzlePositions[i].bounds.size
-                self.moveView(view: self.puzzleTiles[i], position: self.puzzlePositions[i].frame.origin)
-                
-            }) { (success) in
-                print("Done animating!")
-                
-            }
-            
-            
+                self.puzzleTiles[i].bounds.size = self.puzzleStacks[i].bounds.size
+                self.moveView(view: self.puzzleTiles[i], to: self.puzzleStacks[i].frame.origin)
+            })
         }
         self.movePuzzle()
     }
@@ -327,45 +299,46 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     func validatePlacement(viewID: Int, positionID: Int?) {
         //  Tile placed correctley
         if viewID == positionID {
-            moveView(view: puzzleTiles[viewID], position: puzzleDestinations[positionID!].frame.origin)
+            moveView(view: puzzleTiles[viewID], to: puzzleDestinations[positionID!].frame.origin)
             Tile.pieces[viewID].correctlyPlaced = true
             Tile.pieces[viewID].puzzlePosition = positionID
-            print("Correct!")
         } else {
             //  Tile placed wrong
             if positionID != nil {
-                print("Wrong!")
                 Tile.pieces[viewID].correctlyPlaced = false
                 Tile.pieces[viewID].puzzlePosition = positionID
-                moveView(view: puzzleTiles[viewID], position: puzzleDestinations[positionID!].frame.origin)
+                moveView(view: puzzleTiles[viewID], to: puzzleDestinations[positionID!].frame.origin)
             } else {
                 //  Tile is not placed near any position
-                print("Outside")
                 Tile.pieces[viewID].correctlyPlaced = false
                 Tile.pieces[viewID].puzzlePosition = nil
                 if let originalPostion = Tile.pieces[viewID].originalPosition {
-                    puzzleTiles[viewID].bounds.size = puzzlePositions[0].bounds.size
-                    moveView(view: puzzleTiles[viewID], position: originalPostion)
+                    puzzleTiles[viewID].bounds.size = puzzleStacks[0].bounds.size
+                    moveView(view: puzzleTiles[viewID], to: originalPostion)
                 }
             }
         }
     }
     
-    func updateCorrectTilePositions() {
-        
+    func updateViewPositions() {
+        fitViews(views: puzzleDestinations, startPosition: CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y), offset: squarePath.bounds.width / 4)
         
         for i in 0..<Tile.pieces.count {
-            print(Tile.pieces[i].correctlyPlaced)
             if Tile.pieces[i].puzzlePosition != nil {
-                print("called!")
                 let ID = Tile.pieces[i].puzzlePosition
-                moveView(view: puzzleTiles[i], position: puzzleDestinations[ID!].frame.origin)
+                puzzleTiles[i].bounds.size = CGSize(width: squarePath.bounds.width / 4, height: squarePath.bounds.height / 4)
+                moveView(view: puzzleTiles[i], to: puzzleDestinations[ID!].frame.origin)
             }
         }
     }
     
+    func updateUI() {
+        
+    }
+    
     
     @IBAction func moveTileWithPan(_ recognizer: UIPanGestureRecognizer) {
+        
         guard let recognizerView = recognizer.view else {
             return
         }
@@ -390,18 +363,16 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
             }
         }
         
-        //  TODO: Make a generic variable for squarePath.bounds.width / 4 etc.
-        //  TODO: Make switch
-        if recognizer.state == .ended {
+        switch recognizer.state {
+        case .ended:
             validatePlacement(viewID: recognizerView.tag, positionID: positionID)
-        }
-        
-        if recognizer.state == .began {
+        case .began:
             UIView.animate(withDuration: 0.3) {
                 recognizerView.bounds.size = CGSize(width: self.squarePath.bounds.width / 4, height: self.squarePath.bounds.height / 4)
             }
+        default:
+            return
         }
-        
     }
-    
+
 }
