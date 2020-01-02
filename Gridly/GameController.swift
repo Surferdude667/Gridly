@@ -47,6 +47,8 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         var squareSize = CGFloat()
         let maskLayer = CALayer()
         let squareLayer = CAShapeLayer()
+        var iphoneOffset: CGFloat = 0.0
+        
         
         //  Check device and orintation to adjust mask size
         if UIDevice.current.orientation.isLandscape {
@@ -63,7 +65,13 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         
         let overlay = UIBezierPath(rect: CGRect(x: 0, y: 0, width: maskOverlayView.frame.size.width, height: maskOverlayView.frame.size.height))
         
-        squarePath = UIBezierPath(rect: CGRect(x: maskOverlayView.center.x - squareSize / 2, y: maskOverlayView.center.y - squareSize / 2, width: squareSize, height: squareSize))
+        
+        
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            iphoneOffset = 100.0
+        }
+        
+        squarePath = UIBezierPath(rect: CGRect(x: maskOverlayView.center.x - squareSize / 2, y: maskOverlayView.center.y - squareSize / 2 - iphoneOffset, width: squareSize, height: squareSize))
         
         overlay.append(squarePath.reversing())
         squareLayer.path = overlay.cgPath
@@ -212,7 +220,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
                     view.drawHierarchy(in: view.bounds, afterScreenUpdates: false)
                 }
                 
-                Tile.pieces.append(Tile(id: tileId, tileImage: tile, originalPosition: nil, correctlyPlaced: false, puzzlePosition: nil))
+                Tile.pieces.append(Tile(id: tileId, tileImage: tile, originalPosition: nil, correctlyPlaced: false, puzzlePosition: nil, oldTag: nil))
                 xOffset += offsetCalculation
                 tileId += 1
             }
@@ -245,11 +253,17 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     }
         
     func addTilesToViews() {
+        //  Assign tags to puzzleStacks
+        for i in 0..<puzzleTiles.count {
+            puzzleStacks[i].tag = i
+        }
+        
         puzzleStacks.shuffle()
+        
         for i in 0..<puzzleTiles.count {
             puzzleTiles[i].image = Tile.pieces[i].tileImage
             puzzleTiles[i].tag = Tile.pieces[i].id
-            Tile.pieces[i].originalPosition = puzzleStacks[i].frame.origin
+            Tile.pieces[i].oldTag = puzzleStacks[i].tag
         }
     }
     
@@ -292,7 +306,8 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
                 self.moveView(view: self.puzzleTiles[i], to: self.puzzleStacks[i].frame.origin)
             })
         }
-        self.movePuzzle()
+        updateViewPositions()
+        movePuzzle()
     }
     
     
@@ -301,20 +316,21 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         if viewID == positionID {
             moveView(view: puzzleTiles[viewID], to: puzzleDestinations[positionID!].frame.origin)
             Tile.pieces[viewID].correctlyPlaced = true
-            Tile.pieces[viewID].puzzlePosition = positionID
+            Tile.pieces[viewID].puzzlePositionInGrid = positionID
         } else {
             //  Tile placed wrong
             if positionID != nil {
                 Tile.pieces[viewID].correctlyPlaced = false
-                Tile.pieces[viewID].puzzlePosition = positionID
+                Tile.pieces[viewID].puzzlePositionInGrid = positionID
                 moveView(view: puzzleTiles[viewID], to: puzzleDestinations[positionID!].frame.origin)
             } else {
                 //  Tile is not placed near any position
                 Tile.pieces[viewID].correctlyPlaced = false
-                Tile.pieces[viewID].puzzlePosition = nil
-                if let originalPostion = Tile.pieces[viewID].originalPosition {
+                Tile.pieces[viewID].puzzlePositionInGrid = nil
+                
+                if let originalPosition = Tile.pieces[viewID].oldTag {
                     puzzleTiles[viewID].bounds.size = puzzleStacks[0].bounds.size
-                    moveView(view: puzzleTiles[viewID], to: originalPostion)
+                    moveView(view: puzzleTiles[viewID], to: puzzleStacks[originalPosition].frame.origin)
                 }
             }
         }
@@ -323,17 +339,51 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     func updateViewPositions() {
         fitViews(views: puzzleDestinations, startPosition: CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y), offset: squarePath.bounds.width / 4)
         
+        if UIDevice.current.orientation.isLandscape {
+            drawPuzzleStacksPositions(rows: 8.0, startPosition: CGPoint(x: squarePath.bounds.origin.x + squarePath.bounds.width + 10, y: squarePath.bounds.origin.y))
+        } else {
+            drawPuzzleStacksPositions(rows: 2.0, startPosition: CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y + squarePath.bounds.height + 10))
+        }
+        
         for i in 0..<Tile.pieces.count {
-            if Tile.pieces[i].puzzlePosition != nil {
-                let ID = Tile.pieces[i].puzzlePosition
+            if Tile.pieces[i].puzzlePositionInGrid != nil {
+                let ID = Tile.pieces[i].puzzlePositionInGrid
                 puzzleTiles[i].bounds.size = CGSize(width: squarePath.bounds.width / 4, height: squarePath.bounds.height / 4)
                 moveView(view: puzzleTiles[i], to: puzzleDestinations[ID!].frame.origin)
+            } else {
+                puzzleTiles[i].bounds.size = puzzleStacks[i].bounds.size
+                
+                if let originalPosition = Tile.pieces[i].oldTag {
+                    moveView(view: puzzleTiles[i], to: puzzleStacks![originalPosition].frame.origin)
+                }
             }
         }
     }
     
-    func updateUI() {
+    
+    func drawPuzzleStacksPositions(rows: CGFloat, startPosition: CGPoint) {
+        let seats: CGFloat = CGFloat(Int(puzzleStacks.count))
+        var spacing: CGFloat = 5.0
+        let calculatedSpacing = (spacing * (seats / 2 - 1) / (seats / 2))
+        var xOffset: CGFloat = 0.0
+        var yOffset: CGFloat = 0.0
         
+        let size = CGSize(width: squarePath.bounds.width / (seats / 2) - calculatedSpacing, height: squarePath.bounds.height / (seats / 2) - calculatedSpacing)
+        
+        var i = 0
+        for _ in 0..<Int(CGFloat(rows)) {
+            spacing = 0.0
+            for _ in 0..<Int(CGFloat(seats / rows)) {
+                puzzleStacks[i].bounds.size = size
+                puzzleStacks[i].frame.origin = CGPoint(x: startPosition.x + xOffset + spacing, y: startPosition.y + yOffset)
+                
+                xOffset += puzzleStacks[i].bounds.width + spacing
+                spacing = 5.0
+                i += 1
+            }
+            xOffset = 0.0
+            yOffset += puzzleStacks[0].bounds.height + spacing
+        }
     }
     
     
