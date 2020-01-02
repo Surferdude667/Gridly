@@ -13,13 +13,17 @@ class Tile {
     let id: Int
     let tileImage: UIImage
     var originalPosition: CGPoint?
+    var correctlyPlaced: Bool
+    var puzzlePosition: Int?
     
     static var image: UIImage?
     static var pieces = [Tile]()
     
-    init(id: Int, tileImage: UIImage, originalPosition: CGPoint?) {
+    init(id: Int, tileImage: UIImage, originalPosition: CGPoint?, correctlyPlaced: Bool, puzzlePosition: Int?) {
         self.id = id
         self.tileImage = tileImage
         self.originalPosition = originalPosition
+        self.correctlyPlaced = correctlyPlaced
+        self.puzzlePosition = puzzlePosition
     }
 }
