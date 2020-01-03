@@ -15,6 +15,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     var squarePath = UIBezierPath()
     let gridLayer = CALayer()
     var moveCount = 0
+    var previewUsed = false
     
     @IBOutlet weak var contentImage: UIImageView!
     @IBOutlet weak var blurView: UIVisualEffectView!
@@ -25,7 +26,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     
     func configure() {
         blurView.effect = nil
-        Tile.pieces.removeAll()
+        Tile.shared.removeAll()
         configureTapGestures()
     }
     
@@ -68,7 +69,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
             
             //  iPad Portrait
             if UIDevice.current.userInterfaceIdiom == .pad {
-              squareSize = maskOverlayView.bounds.width - 200
+                squareSize = maskOverlayView.bounds.width - 200
             }
             
             //  iPhone Portrait
@@ -229,7 +230,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
                     view.drawHierarchy(in: view.bounds, afterScreenUpdates: false)
                 }
                 
-                Tile.pieces.append(Tile(id: tileId, tileImage: tile, originalPosition: nil, correctlyPlaced: false, puzzlePosition: nil, oldTag: nil))
+                Tile.shared.append(Tile(id: tileId, tileImage: tile, correctlyPlaced: false, puzzlePosition: nil, oldTag: nil))
                 xOffset += offsetCalculation
                 tileId += 1
             }
@@ -257,7 +258,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
             }
         }
     }
-        
+    
     func addTilesToViews() {
         //  Assign tags to puzzleStacks
         for i in 0..<puzzleTiles.count {
@@ -267,9 +268,9 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         puzzleStacks.shuffle()
         
         for i in 0..<puzzleTiles.count {
-            puzzleTiles[i].image = Tile.pieces[i].tileImage
-            puzzleTiles[i].tag = Tile.pieces[i].id
-            Tile.pieces[i].oldTag = puzzleStacks[i].tag
+            puzzleTiles[i].image = Tile.shared[i].tileImage
+            puzzleTiles[i].tag = Tile.shared[i].id
+            Tile.shared[i].stackPairID = puzzleStacks[i].tag
         }
     }
     
@@ -321,29 +322,30 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         //  Tile placed correctley
         if viewID == positionID {
             moveView(view: puzzleTiles[viewID], to: puzzleDestinations[positionID!].frame.origin)
-            Tile.pieces[viewID].correctlyPlaced = true
-            Tile.pieces[viewID].puzzlePositionInGrid = positionID
+            Tile.shared[viewID].correctlyPlaced = true
+            Tile.shared[viewID].puzzlePositionInGrid = positionID
             moveCount += 1
             moveCountLabel.text = "\(moveCount)"
         } else {
             //  Tile placed wrong
             if positionID != nil {
-                Tile.pieces[viewID].correctlyPlaced = false
-                Tile.pieces[viewID].puzzlePositionInGrid = positionID
+                Tile.shared[viewID].correctlyPlaced = false
+                Tile.shared[viewID].puzzlePositionInGrid = positionID
                 moveView(view: puzzleTiles[viewID], to: puzzleDestinations[positionID!].frame.origin)
                 moveCount += 1
                 moveCountLabel.text = "\(moveCount)"
             } else {
                 //  Tile is not placed near any position
-                Tile.pieces[viewID].correctlyPlaced = false
-                Tile.pieces[viewID].puzzlePositionInGrid = nil
+                Tile.shared[viewID].correctlyPlaced = false
+                Tile.shared[viewID].puzzlePositionInGrid = nil
                 
-                if let originalPosition = Tile.pieces[viewID].oldTag {
+                if let originalPosition = Tile.shared[viewID].stackPairID {
                     puzzleTiles[viewID].bounds.size = puzzleStacks[0].bounds.size
                     moveView(view: puzzleTiles[viewID], to: puzzleStacks[originalPosition].frame.origin)
                 }
             }
         }
+        checkGameStatus()
     }
     
     func updateViewPositions() {
@@ -355,15 +357,15 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
             positionPuzzleStacks(rows: 2.0, startPosition: CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y + squarePath.bounds.height + 10))
         }
         
-        for i in 0..<Tile.pieces.count {
-            if Tile.pieces[i].puzzlePositionInGrid != nil {
-                let ID = Tile.pieces[i].puzzlePositionInGrid
+        for i in 0..<Tile.shared.count {
+            if Tile.shared[i].puzzlePositionInGrid != nil {
+                let ID = Tile.shared[i].puzzlePositionInGrid
                 puzzleTiles[i].bounds.size = CGSize(width: squarePath.bounds.width / 4, height: squarePath.bounds.height / 4)
                 moveView(view: puzzleTiles[i], to: puzzleDestinations[ID!].frame.origin)
             } else {
                 puzzleTiles[i].bounds.size = puzzleStacks[i].bounds.size
                 
-                if let originalPosition = Tile.pieces[i].oldTag {
+                if let originalPosition = Tile.shared[i].stackPairID {
                     moveView(view: puzzleTiles[i], to: puzzleStacks![originalPosition].frame.origin)
                 }
             }
@@ -396,6 +398,48 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    
+    
+    func preview() {
+        for i in 0..<Tile.shared.count {
+            
+            if previewUsed == false {
+
+                //  Move pieces to correct place
+                if Tile.shared[i].correctlyPlaced == false && Tile.shared[i].puzzlePositionInGrid != nil {
+                    moveView(view: puzzleTiles[i], to: puzzleDestinations[i].frame.origin)
+                } else if Tile.shared[i].puzzlePositionInGrid == nil {
+                    puzzleTiles[i].bounds.size = puzzleDestinations[i].bounds.size
+                    moveView(view: puzzleTiles[i], to: puzzleDestinations[i].frame.origin)
+                }
+                
+                //  Move pieces back after 2 sec
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                    if Tile.shared[i].correctlyPlaced == false && Tile.shared[i].puzzlePositionInGrid != nil {
+                        self.moveView(view: self.puzzleTiles[i], to: self.puzzleDestinations[Tile.shared[i].puzzlePositionInGrid!].frame.origin)
+                    } else if Tile.shared[i].puzzlePositionInGrid == nil {
+                        self.puzzleTiles[i].bounds.size = self.puzzleStacks[i].bounds.size
+                        self.moveView(view: self.puzzleTiles[i], to: self.puzzleStacks[Tile.shared[i].stackPairID!].frame.origin)
+                    }
+                }
+            }
+        }
+        previewUsed = true
+    }
+    
+    func checkGameStatus() {
+        var correctAnswers = 0
+        
+        for element in Tile.shared {
+            if element.correctlyPlaced {
+                correctAnswers += 1
+            }
+        }
+        
+        if correctAnswers == Tile.shared.count {
+            print("Game completed!")
+        }
+    }
     
     
     
@@ -436,5 +480,12 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
             return
         }
     }
-
+    
+    @IBAction func previewButton(_ sender: Any) {
+        preview()
+    }
+    
+    @IBAction func newGameButton(_ sender: Any) {
+    }
+    
 }

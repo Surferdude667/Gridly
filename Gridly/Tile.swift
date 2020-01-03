@@ -12,20 +12,18 @@ import UIKit
 class Tile {
     let id: Int
     let tileImage: UIImage
-    var originalPosition: CGPoint?
     var correctlyPlaced: Bool
     var puzzlePositionInGrid: Int?
-    var oldTag: Int?
+    var stackPairID: Int?
     
     static var image: UIImage?
-    static var pieces = [Tile]()
+    static var shared = [Tile]()
     
-    init(id: Int, tileImage: UIImage, originalPosition: CGPoint?, correctlyPlaced: Bool, puzzlePosition: Int?, oldTag: Int?) {
+    init(id: Int, tileImage: UIImage, correctlyPlaced: Bool, puzzlePosition: Int?, oldTag: Int?) {
         self.id = id
         self.tileImage = tileImage
-        self.originalPosition = originalPosition
         self.correctlyPlaced = correctlyPlaced
         self.puzzlePositionInGrid = puzzlePosition
-        self.oldTag = oldTag
+        self.stackPairID = oldTag
     }
 }
