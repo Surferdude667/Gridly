@@ -40,7 +40,6 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         for element in puzzleStacks {
             element.alpha = 0.0
         }
-        
     }
     
     
@@ -58,25 +57,17 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         //  All other UI elements adjusts itself based on maske size
         if UIDevice.current.orientation.isLandscape {
             
-            //  iPad Landscape
             if UIDevice.current.userInterfaceIdiom == .pad {
                 squareSize = maskOverlayView.bounds.height - 250
-            }
-            
-            //  iPhone Landscape
-            if UIDevice.current.userInterfaceIdiom == .phone {
+            } else if UIDevice.current.userInterfaceIdiom == .phone {
                 squareSize = maskOverlayView.bounds.height - 50
             }
             
         } else if UIDevice.current.orientation.isPortrait {
             
-            //  iPad Portrait
             if UIDevice.current.userInterfaceIdiom == .pad {
                 squareSize = maskOverlayView.bounds.width - 200
-            }
-            
-            //  iPhone Portrait
-            if UIDevice.current.userInterfaceIdiom == .phone {
+            } else if UIDevice.current.userInterfaceIdiom == .phone {
                 squareSize = maskOverlayView.bounds.width - 50
             }
         }
@@ -147,8 +138,6 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         animateTilesToStack()
     }
     
-    
-    //  TODO: Flicker problem on to much zoom.
     @objc func moveImage(_ sender: UIPanGestureRecognizer) {
         let translation = sender.translation(in: contentImage.superview)
         
@@ -162,13 +151,11 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         contentImage.transform = contentImage.transform.translatedBy(x: position.x, y: position.y)
     }
     
-    //  TODO: Rotates from the middle now...
     @objc func rotateImage(_ sender: UIRotationGestureRecognizer) {
         contentImage.transform = contentImage.transform.rotated(by: sender.rotation)
         sender.rotation = 0
     }
     
-    //  TODO: Scales from the middle of image now...
     @objc func scaleImage(_ sender: UIPinchGestureRecognizer) {
         contentImage.transform = contentImage.transform.scaledBy(x: sender.scale, y: sender.scale)
         sender.scale = 1
@@ -176,13 +163,6 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func configureTapGestures() {
-        preGameControlsView.isUserInteractionEnabled = true
-        
-        //  MARK: Tap Gesture
-        //        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(createPuzzle(_:)))
-        //        maskOverlayView.addGestureRecognizer(tapGestureRecognizer)
-        //        tapGestureRecognizer.delegate = self
-        
         //  MARK: Pan Gesture
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(moveImage(_:)))
         preGameControlsView.addGestureRecognizer(panGestureRecognizer)
@@ -250,7 +230,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
             yOffset += offsetCalculation
         }
     }
-    
+
     
     func animateToGame() {
         UIView.animate(withDuration: 1.5, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.5, options: [], animations: {
@@ -366,9 +346,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
                 }
             }
         }
-        
         gameControlsView.frame = self.view.frame
-        
     }
     
     
@@ -398,7 +376,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func positionPreGameElements() {
-        
+
         //  Check device and orintation to adjust mask size
         //  All other UI elements adjusts itself based on maske size
         if UIDevice.current.orientation.isLandscape {
@@ -420,7 +398,6 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
                 startGameButton.frame.origin.x = squarePath.bounds.origin.x + squarePath.bounds.width + 30
                 startGameButton.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height / 2 - startGameButton.bounds.height / 2
             }
-            
         } else if UIDevice.current.orientation.isPortrait {
                 infoLabel.frame.origin.x = view.bounds.origin.x + view.bounds.width / 2 - infoLabel.bounds.width / 2
                 infoLabel.frame.origin.y = squarePath.bounds.origin.y - 50
