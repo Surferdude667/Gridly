@@ -300,23 +300,28 @@
                                                 <outletCollection property="gestureRecognizers" destination="Keq-f7-K80" appends="YES" id="nlX-6t-U2D"/>
                                             </connections>
                                         </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="0" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wsa-Nb-AkT">
-                                            <rect key="frame" x="178" y="87" width="100" height="40"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="MOVES 0" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wsa-Nb-AkT">
+                                            <rect key="frame" x="195" y="67" width="60" height="40"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
+                                            <size key="shadowOffset" width="0.0" height="0.0"/>
                                         </label>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="isX-sk-vle">
-                                            <rect key="frame" x="307" y="61" width="57" height="52"/>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="isX-sk-vle">
+                                            <rect key="frame" x="286" y="67" width="120" height="40"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
-                                            <state key="normal" backgroundImage="eye_white">
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
+                                            <inset key="titleEdgeInsets" minX="-59" minY="0.0" maxX="6" maxY="0.0"/>
+                                            <inset key="imageEdgeInsets" minX="74" minY="8" maxX="17" maxY="8"/>
+                                            <state key="normal" title="PREVIEW" image="eye_black">
                                                 <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <preferredSymbolConfiguration key="preferredSymbolConfiguration" scale="default"/>
                                             </state>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                    <integer key="value" value="5"/>
+                                                    <integer key="value" value="7"/>
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
@@ -326,51 +331,44 @@
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FUB-Pd-Bfu">
                                             <rect key="frame" x="50" y="67" width="120" height="40"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
                                             <state key="normal" title="NEW GAME">
-                                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </state>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                    <integer key="value" value="5"/>
+                                                    <integer key="value" value="7"/>
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
                                                 <action selector="newGameButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="CBI-jM-CeU"/>
                                             </connections>
                                         </button>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Moves" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mYb-Qv-jt5">
-                                            <rect key="frame" x="203" y="67" width="51" height="21"/>
+                                        <label opaque="NO" userInteractionEnabled="NO" alpha="0.80000000000000004" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Adjust the image." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MGB-N2-Evc">
+                                            <rect key="frame" x="130" y="147" width="114" height="20"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <nil key="textColor"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c23-kn-xTM">
-                                            <rect key="frame" x="132" y="791" width="150" height="40"/>
+                                            <rect key="frame" x="151" y="788" width="112" height="34"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
                                             <state key="normal" title="START GAME">
                                                 <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             </state>
                                             <userDefinedRuntimeAttributes>
                                                 <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                    <integer key="value" value="5"/>
+                                                    <integer key="value" value="7"/>
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
                                                 <action selector="startGameButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HQw-xi-GLu"/>
                                             </connections>
                                         </button>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Adjust the puzzle image" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MGB-N2-Evc">
-                                            <rect key="frame" x="59" y="164" width="183" height="21"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
                                     </subviews>
                                 </view>
                                 <blurEffect style="regular"/>
@@ -393,6 +391,8 @@
                         <outlet property="contentImage" destination="Pxt-7b-4is" id="A6D-he-l94"/>
                         <outlet property="infoLabel" destination="MGB-N2-Evc" id="LCB-7D-Kc3"/>
                         <outlet property="moveCountLabel" destination="Wsa-Nb-AkT" id="ypI-dS-ti8"/>
+                        <outlet property="newGameButton" destination="FUB-Pd-Bfu" id="Soh-rr-cPg"/>
+                        <outlet property="previewButton" destination="isX-sk-vle" id="Jjz-0g-F1E"/>
                         <outlet property="startGameButton" destination="c23-kn-xTM" id="Sot-Ep-uBC"/>
                         <outletCollection property="puzzleDestinations" destination="edx-3b-Hb0" collectionClass="NSMutableArray" id="ISs-j4-hdC"/>
                         <outletCollection property="puzzleDestinations" destination="d8B-lO-zT8" collectionClass="NSMutableArray" id="q3h-KX-CVU"/>
@@ -531,6 +531,6 @@
     </scenes>
     <resources>
         <image name="background" width="5120" height="2880"/>
-        <image name="eye_white" width="512" height="512"/>
+        <image name="eye_black" width="512" height="512"/>
     </resources>
 </document>

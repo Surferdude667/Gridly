@@ -10,8 +10,9 @@ import UIKit
 
 class GameController: UIViewController, UIGestureRecognizerDelegate {
     
-    let maskOverlayView = UIView()
     let preGameControlsView = UIView()
+    let maskOverlayView = UIView()
+    let gameControlsView = UIView()
     var contentImageOffset = CGPoint()
     var squarePath = UIBezierPath()
     let gridLayer = CALayer()
@@ -26,15 +27,24 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     @IBOutlet weak var moveCountLabel: UILabel!
     @IBOutlet weak var infoLabel: UILabel!
     @IBOutlet weak var startGameButton: UIButton!
+    @IBOutlet weak var newGameButton: UIButton!
+    @IBOutlet weak var previewButton: UIButton!
     
     func configure() {
         blurView.effect = nil
         Tile.shared.removeAll()
         configureTapGestures()
+        addGameControls()
+        gameControlsView.isHidden = true
+        
+        for element in puzzleStacks {
+            element.alpha = 0.0
+        }
+        
     }
     
     
-    func createMask() {
+    func drawMask() {
         maskOverlayView.frame = self.view.frame
         maskOverlayView.backgroundColor =  UIColor.black.withAlphaComponent(0.6)
         self.view.addSubview(maskOverlayView)
@@ -169,9 +179,9 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         preGameControlsView.isUserInteractionEnabled = true
         
         //  MARK: Tap Gesture
-//        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(createPuzzle(_:)))
-//        maskOverlayView.addGestureRecognizer(tapGestureRecognizer)
-//        tapGestureRecognizer.delegate = self
+        //        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(createPuzzle(_:)))
+        //        maskOverlayView.addGestureRecognizer(tapGestureRecognizer)
+        //        tapGestureRecognizer.delegate = self
         
         //  MARK: Pan Gesture
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(moveImage(_:)))
@@ -190,13 +200,19 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     
-    func bringViewsToTop() {
+    func addPreGameControls() {
         preGameControlsView.frame = self.view.frame
         self.view.addSubview(preGameControlsView)
         preGameControlsView.addSubview(startGameButton)
         preGameControlsView.addSubview(infoLabel)
-        
-        //self.blurView.bringSubviewToFront(startGameButton)
+    }
+    
+    func addGameControls() {
+        gameControlsView.frame = self.view.frame
+        self.view.addSubview(gameControlsView)
+        gameControlsView.addSubview(newGameButton)
+        gameControlsView.addSubview(moveCountLabel)
+        gameControlsView.addSubview(previewButton)
     }
     
     
@@ -241,6 +257,11 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
             self.maskOverlayView.alpha = 0.0
             self.gridLayer.opacity = 0.0
             self.preGameControlsView.alpha = 0.0
+            
+            for element in self.puzzleStacks {
+                element.alpha = 0.5
+            }
+            
         }) { (success) in
             UIView.animate(withDuration: 1.0) {
                 self.blurView.effect = UIBlurEffect(style: UIBlurEffect.Style.dark)
@@ -248,10 +269,16 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
                 self.gridLayer.frame.origin = CGPoint(x: self.view.bounds.origin.x, y: self.view.bounds.origin.y)
                 self.maskOverlayView.isHidden = true
                 self.preGameControlsView.isHidden = true
+                self.gameControlsView.isHidden = false
                 
                 for element in self.puzzleDestinations {
                     element.backgroundColor = UIColor.black
                     element.alpha = 0.5
+                }
+                
+                //  Add the tiles to the game controls view
+                for elemets in self.puzzleTiles {
+                    self.gameControlsView.addSubview(elemets)
                 }
             }
         }
@@ -294,7 +321,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
             Tile.shared[viewID].correctlyPlaced = true
             Tile.shared[viewID].puzzlePositionInGrid = positionID
             moveCount += 1
-            moveCountLabel.text = "\(moveCount)"
+            moveCountLabel.text = "MOVES \(moveCount)"
         } else {
             //  Tile placed wrong
             if positionID != nil {
@@ -302,7 +329,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
                 Tile.shared[viewID].puzzlePositionInGrid = positionID
                 GameHelper.moveView(view: puzzleTiles[viewID], to: puzzleDestinations[positionID!].frame.origin)
                 moveCount += 1
-                moveCountLabel.text = "\(moveCount)"
+                moveCountLabel.text = "MOVES \(moveCount)"
             } else {
                 //  Tile is not placed near any position
                 Tile.shared[viewID].correctlyPlaced = false
@@ -320,11 +347,10 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     func updateViewPositions() {
         GameHelper.fitViews(views: puzzleDestinations, startPosition: CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y), offset: squarePath.bounds.width / 4)
         
-        
         if UIDevice.current.orientation.isLandscape {
-            positionPuzzleStacks(rows: 8.0, startPosition: CGPoint(x: squarePath.bounds.origin.x + squarePath.bounds.width + 10, y: squarePath.bounds.origin.y))
+            positionPuzzleStacks(rows: 8.0, startPosition: CGPoint(x: squarePath.bounds.origin.x + squarePath.bounds.width + 20, y: squarePath.bounds.origin.y))
         } else if UIDevice.current.orientation.isPortrait {
-            positionPuzzleStacks(rows: 2.0, startPosition: CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y + squarePath.bounds.height + 10))
+            positionPuzzleStacks(rows: 2.0, startPosition: CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y + squarePath.bounds.height + 20))
         }
         
         for i in 0..<Tile.shared.count {
@@ -340,6 +366,8 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
                 }
             }
         }
+        
+        gameControlsView.frame = self.view.frame
         
     }
     
@@ -382,35 +410,49 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
                 
                 startGameButton.frame.origin.x = view.bounds.origin.x + view.bounds.width / 2 - startGameButton.bounds.width / 2
                 startGameButton.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height + 30
-                
             }
             
             //  iPhone Landscape
             if UIDevice.current.userInterfaceIdiom == .phone {
-                infoLabel.frame.origin.x = view.bounds.origin.x + view.bounds.width / 2 - infoLabel.bounds.width / 2
-                infoLabel.frame.origin.y = squarePath.bounds.origin.y - 50
+                infoLabel.frame.origin.x = squarePath.bounds.origin.x - infoLabel.bounds.width - 30
+                infoLabel.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height / 2 - infoLabel.bounds.height / 2
                 
+                startGameButton.frame.origin.x = squarePath.bounds.origin.x + squarePath.bounds.width + 30
+                startGameButton.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height / 2 - startGameButton.bounds.height / 2
             }
             
         } else if UIDevice.current.orientation.isPortrait {
-            
-            //  iPad Portrait
-            if UIDevice.current.userInterfaceIdiom == .pad {
                 infoLabel.frame.origin.x = view.bounds.origin.x + view.bounds.width / 2 - infoLabel.bounds.width / 2
                 infoLabel.frame.origin.y = squarePath.bounds.origin.y - 50
                 
                 startGameButton.frame.origin.x = view.bounds.origin.x + view.bounds.width / 2 - startGameButton.bounds.width / 2
                 startGameButton.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height + 30
-            }
+        }
+    }
+    
+    func positionGameElements() {
+        
+        if UIDevice.current.orientation.isLandscape {
             
-            //  iPhone Portrait
-            if UIDevice.current.userInterfaceIdiom == .phone {
-                infoLabel.frame.origin.x = view.bounds.origin.x + view.bounds.width / 2 - infoLabel.bounds.width / 2
-                infoLabel.frame.origin.y = squarePath.bounds.origin.y - 50
-                
-                startGameButton.frame.origin.x = view.bounds.origin.x + view.bounds.width / 2 - startGameButton.bounds.width / 2
-                startGameButton.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height + 30
-            }
+            newGameButton.frame.origin.x = squarePath.bounds.origin.x - newGameButton.bounds.width - 20
+            newGameButton.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height / 4
+            
+            moveCountLabel.frame.origin.x = squarePath.bounds.origin.x - 110
+            moveCountLabel.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height / 2 - moveCountLabel.bounds.height / 2
+            
+            previewButton.frame.origin.x = squarePath.bounds.origin.x - previewButton.bounds.width - 20
+            previewButton.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height / 4 * 3 - previewButton.bounds.height
+            
+        } else if UIDevice.current.orientation.isPortrait {
+            
+            newGameButton.frame.origin.x = squarePath.bounds.origin.x
+            newGameButton.frame.origin.y = squarePath.bounds.origin.y - 65
+            
+            moveCountLabel.frame.origin.x = squarePath.bounds.origin.x + squarePath.bounds.width / 2 - moveCountLabel.bounds.width / 2
+            moveCountLabel.frame.origin.y = squarePath.bounds.origin.y - 65
+            
+            previewButton.frame.origin.x = squarePath.bounds.origin.x + squarePath.bounds.width - previewButton.bounds.width
+            previewButton.frame.origin.y = squarePath.bounds.origin.y - 65
         }
         
     }
@@ -420,7 +462,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         for i in 0..<Tile.shared.count {
             
             if previewUsed == false {
-
+                
                 //  Move pieces to correct place
                 if Tile.shared[i].correctlyPlaced == false && Tile.shared[i].puzzlePositionInGrid != nil {
                     GameHelper.moveView(view: puzzleTiles[i], to: puzzleDestinations[i].frame.origin)
@@ -465,23 +507,16 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         configure()
     }
     
-    @objc func refreshUI() {
-        createMask()
-        drawGrid()
-        updateViewPositions()
-        bringViewsToTop()
-        positionPreGameElements()
-    }
     
     override func viewDidLayoutSubviews() {
-        refreshUI()
+        super.viewDidLayoutSubviews()
+        drawMask()
+        drawGrid()
+        updateViewPositions()
+        positionPreGameElements()
+        positionGameElements()
+        addPreGameControls()
     }
-    
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(true)
-//        NotificationCenter.default.addObserver(self, selector: #selector(refreshUI), name: UIApplication.willEnterForegroundNotification, object: nil)
-//    }
-    
     
     
     @IBAction func moveTileWithPan(_ recognizer: UIPanGestureRecognizer) {
@@ -524,6 +559,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     
     @IBAction func previewButton(_ sender: Any) {
         preview()
+        previewButton.alpha = 0.2
     }
     
     @IBAction func newGameButton(_ sender: Any) {
