@@ -43,24 +43,12 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     override func viewDidLayoutSubviews() {
-        print("Hej")
         drawMask()
         drawGrid()
-        
         updateViewPositions()
         addPreGameControls()
     }
     
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(true)
-
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-        
-    }
     
     func drawMask() {
         maskOverlayView.frame = view.frame
@@ -74,21 +62,16 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         //  Check device and orintation to adjust mask size
         //  All other UI elements adjusts itself based on maske size
         if UIDevice.current.userInterfaceIdiom == .phone {
-            print("Phone!")
             if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
-                print("Phone Portrait!")
                 squareSize = maskOverlayView.bounds.width - 50.0
             } else {
-                print("Phone Landscape")
                 squareSize = maskOverlayView.bounds.height - 50.0
             }
+            
         } else if UIDevice.current.userInterfaceIdiom == .pad {
-            print("iPad")
             if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
-                print("iPad portrait")
                 squareSize = maskOverlayView.bounds.width - 200.0
             } else {
-                print("iPad Landscape")
                 squareSize = maskOverlayView.bounds.height - 250.0
             }
         }
@@ -251,7 +234,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
             yOffset += offsetCalculation
         }
     }
-
+    
     
     func animateToGame() {
         UIView.animate(withDuration: 1.5, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.5, options: [], animations: {
@@ -316,6 +299,21 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func validatePlacement(viewID: Int, positionID: Int?) {
+        
+        //  Checks if tiles is placed on top of another tile
+        for position in Tile.shared {
+            if positionID == position.puzzlePositionInGrid {
+                Tile.shared[viewID].correctlyPlaced = false
+                Tile.shared[viewID].puzzlePositionInGrid = nil
+                
+                if let originalPosition = Tile.shared[viewID].stackPairID {
+                    puzzleTiles[viewID].bounds.size = puzzleStacks[0].bounds.size
+                    GameHelper.moveView(view: puzzleTiles[viewID], to: puzzleStacks[originalPosition].frame.origin)
+                    return
+                }
+            }
+        }
+        
         //  Tile placed correctley
         if viewID == positionID {
             GameHelper.moveView(view: puzzleTiles[viewID], to: puzzleDestinations[positionID!].frame.origin)
@@ -344,6 +342,8 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         }
         checkGameStatus()
     }
+    
+    
     
     func updateViewPositions() {
         
@@ -406,7 +406,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func positionPreGameElements() {
-
+        
         //  Check device and orintation to adjust mask size
         //  All other UI elements adjusts itself based on maske size
         if UIScreen.main.bounds.height < UIScreen.main.bounds.width {
@@ -431,11 +431,11 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
             
             //  iPhone and iPad Portrait
         } else if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
-                infoLabel.frame.origin.x = view.bounds.origin.x + view.bounds.width / 2 - infoLabel.bounds.width / 2
-                infoLabel.frame.origin.y = squarePath.bounds.origin.y - 50
-                
-                startGameButton.frame.origin.x = view.bounds.origin.x + view.bounds.width / 2 - startGameButton.bounds.width / 2
-                startGameButton.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height + 30
+            infoLabel.frame.origin.x = view.bounds.origin.x + view.bounds.width / 2 - infoLabel.bounds.width / 2
+            infoLabel.frame.origin.y = squarePath.bounds.origin.y - 50
+            
+            startGameButton.frame.origin.x = view.bounds.origin.x + view.bounds.width / 2 - startGameButton.bounds.width / 2
+            startGameButton.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height + 30
         }
         
     }
@@ -500,15 +500,13 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func animateResult() {
-        for element in Tile.shared {
-           UIView.animate(withDuration: 2.5, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.5, options: [], animations: {
-                    
-            self.puzzleTiles[element.id].bounds.size = self.puzzleStacks[element.id].bounds.size
-            self.puzzleStacks[element.stackPairID!].backgroundColor = UIColor.green
-            
-            }) { (success) in
-                self.performSegue(withIdentifier: "resultSegue", sender: self)
+        UIView.animate(withDuration: 2.5, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.5, options: [], animations: {
+            for element in Tile.shared {
+                self.puzzleTiles[element.id].bounds.size = self.puzzleStacks[element.id].bounds.size
+                self.puzzleStacks[element.stackPairID!].backgroundColor = UIColor.green
             }
+        }) { (success) in
+            self.performSegue(withIdentifier: "resultSegue", sender: self)
         }
     }
     
@@ -522,9 +520,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         }
         
         if correctAnswers == Tile.shared.count {
-            print("Game completed!")
             animateResult()
-            
         }
     }
     
@@ -533,7 +529,6 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         super.viewDidLoad()
         configure()
     }
-        
     
     
     @IBAction func moveTileWithPan(_ recognizer: UIPanGestureRecognizer) {
@@ -566,6 +561,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         case .ended:
             validatePlacement(viewID: recognizerView.tag, positionID: positionID)
         case .began:
+            gameControlsView.bringSubviewToFront(recognizerView)
             UIView.animate(withDuration: 0.3) {
                 recognizerView.bounds.size = CGSize(width: self.squarePath.bounds.width / 4, height: self.squarePath.bounds.height / 4)
             }
@@ -580,6 +576,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     @IBAction func newGameButton(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
     }
     
     @IBAction func startGameButton(_ sender: Any) {
