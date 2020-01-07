@@ -42,9 +42,28 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    override func viewDidLayoutSubviews() {
+        print("Hej")
+        drawMask()
+        drawGrid()
+        
+        updateViewPositions()
+        addPreGameControls()
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(true)
+        
+    }
     
     func drawMask() {
-        maskOverlayView.frame = self.view.frame
+        maskOverlayView.frame = view.frame
         maskOverlayView.backgroundColor =  UIColor.black.withAlphaComponent(0.6)
         self.view.addSubview(maskOverlayView)
         
@@ -52,23 +71,25 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         let maskLayer = CALayer()
         let squareLayer = CAShapeLayer()
         
-        
         //  Check device and orintation to adjust mask size
         //  All other UI elements adjusts itself based on maske size
-        if UIDevice.current.orientation.isLandscape {
-            
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                squareSize = maskOverlayView.bounds.height - 250
-            } else if UIDevice.current.userInterfaceIdiom == .phone {
-                squareSize = maskOverlayView.bounds.height - 50
+        if UIDevice.current.userInterfaceIdiom == .phone {
+            print("Phone!")
+            if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
+                print("Phone Portrait!")
+                squareSize = maskOverlayView.bounds.width - 50.0
+            } else {
+                print("Phone Landscape")
+                squareSize = maskOverlayView.bounds.height - 50.0
             }
-            
-        } else if UIDevice.current.orientation.isPortrait {
-            
-            if UIDevice.current.userInterfaceIdiom == .pad {
-                squareSize = maskOverlayView.bounds.width - 200
-            } else if UIDevice.current.userInterfaceIdiom == .phone {
-                squareSize = maskOverlayView.bounds.width - 50
+        } else if UIDevice.current.userInterfaceIdiom == .pad {
+            print("iPad")
+            if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
+                print("iPad portrait")
+                squareSize = maskOverlayView.bounds.width - 200.0
+            } else {
+                print("iPad Landscape")
+                squareSize = maskOverlayView.bounds.height - 250.0
             }
         }
         
@@ -180,19 +201,19 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     
-    func addPreGameControls() {
-        preGameControlsView.frame = self.view.frame
-        self.view.addSubview(preGameControlsView)
-        preGameControlsView.addSubview(startGameButton)
-        preGameControlsView.addSubview(infoLabel)
-    }
-    
     func addGameControls() {
         gameControlsView.frame = self.view.frame
         self.view.addSubview(gameControlsView)
         gameControlsView.addSubview(newGameButton)
         gameControlsView.addSubview(moveCountLabel)
         gameControlsView.addSubview(previewButton)
+    }
+    
+    func addPreGameControls() {
+        preGameControlsView.frame = self.view.frame
+        self.view.addSubview(preGameControlsView)
+        preGameControlsView.addSubview(startGameButton)
+        preGameControlsView.addSubview(infoLabel)
     }
     
     
@@ -325,14 +346,19 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     func updateViewPositions() {
+        
+        //  Update destination positions.
         GameHelper.fitViews(views: puzzleDestinations, startPosition: CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y), offset: squarePath.bounds.width / 4)
         
-        if UIDevice.current.orientation.isLandscape {
+        //  Update stacks positions.
+        //  Landscape
+        if UIScreen.main.bounds.height < UIScreen.main.bounds.width {
             positionPuzzleStacks(rows: 8.0, startPosition: CGPoint(x: squarePath.bounds.origin.x + squarePath.bounds.width + 20, y: squarePath.bounds.origin.y))
-        } else if UIDevice.current.orientation.isPortrait {
+        } else {
             positionPuzzleStacks(rows: 2.0, startPosition: CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y + squarePath.bounds.height + 20))
         }
         
+        //  Update tiles positions.
         for i in 0..<Tile.shared.count {
             if Tile.shared[i].puzzlePositionInGrid != nil {
                 let ID = Tile.shared[i].puzzlePositionInGrid
@@ -346,7 +372,11 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
                 }
             }
         }
-        gameControlsView.frame = self.view.frame
+        
+        //  Update Game Controls and PreGame controls.
+        gameControlsView.frame = view.frame
+        positionPreGameElements()
+        positionGameElements()
     }
     
     
@@ -379,7 +409,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
 
         //  Check device and orintation to adjust mask size
         //  All other UI elements adjusts itself based on maske size
-        if UIDevice.current.orientation.isLandscape {
+        if UIScreen.main.bounds.height < UIScreen.main.bounds.width {
             
             //  iPad Landscape
             if UIDevice.current.userInterfaceIdiom == .pad {
@@ -398,18 +428,24 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
                 startGameButton.frame.origin.x = squarePath.bounds.origin.x + squarePath.bounds.width + 30
                 startGameButton.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height / 2 - startGameButton.bounds.height / 2
             }
-        } else if UIDevice.current.orientation.isPortrait {
+            
+            //  iPhone and iPad Portrait
+        } else if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
                 infoLabel.frame.origin.x = view.bounds.origin.x + view.bounds.width / 2 - infoLabel.bounds.width / 2
                 infoLabel.frame.origin.y = squarePath.bounds.origin.y - 50
                 
                 startGameButton.frame.origin.x = view.bounds.origin.x + view.bounds.width / 2 - startGameButton.bounds.width / 2
                 startGameButton.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height + 30
         }
+        
     }
+    
+    
     
     func positionGameElements() {
         
-        if UIDevice.current.orientation.isLandscape {
+        //  Landscape
+        if UIScreen.main.bounds.height < UIScreen.main.bounds.width {
             
             newGameButton.frame.origin.x = squarePath.bounds.origin.x - newGameButton.bounds.width - 20
             newGameButton.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height / 4
@@ -420,7 +456,8 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
             previewButton.frame.origin.x = squarePath.bounds.origin.x - previewButton.bounds.width - 20
             previewButton.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height / 4 * 3 - previewButton.bounds.height
             
-        } else if UIDevice.current.orientation.isPortrait {
+            //  Portrait
+        } else if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
             
             newGameButton.frame.origin.x = squarePath.bounds.origin.x
             newGameButton.frame.origin.y = squarePath.bounds.origin.y - 65
@@ -462,6 +499,18 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         previewUsed = true
     }
     
+    func animateResult() {
+        for element in Tile.shared {
+           UIView.animate(withDuration: 2.5, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.5, options: [], animations: {
+                    
+            self.puzzleTiles[element.id].bounds.size = self.puzzleStacks[element.id].bounds.size
+            self.puzzleStacks[element.stackPairID!].backgroundColor = UIColor.green
+            
+            }) { (success) in
+                self.performSegue(withIdentifier: "resultSegue", sender: self)
+            }
+        }
+    }
     
     func checkGameStatus() {
         var correctAnswers = 0
@@ -474,7 +523,8 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         
         if correctAnswers == Tile.shared.count {
             print("Game completed!")
-            performSegue(withIdentifier: "resultSegue", sender: self)
+            animateResult()
+            
         }
     }
     
@@ -483,18 +533,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         super.viewDidLoad()
         configure()
     }
-    
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        drawMask()
-        drawGrid()
-        updateViewPositions()
-        positionPreGameElements()
-        positionGameElements()
-        addPreGameControls()
-    }
-    
+        
     
     
     @IBAction func moveTileWithPan(_ recognizer: UIPanGestureRecognizer) {
