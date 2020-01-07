@@ -15,6 +15,8 @@
 		F62DB639239E3C6F009AE655 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F62DB638239E3C6F009AE655 /* Assets.xcassets */; };
 		F62DB63C239E3C6F009AE655 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F62DB63A239E3C6F009AE655 /* LaunchScreen.storyboard */; };
 		F680F82D23BFA8A100187721 /* GameHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F680F82C23BFA8A100187721 /* GameHelper.swift */; };
+		F6F0656F23C46FC400962E0C /* ResultController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F0656E23C46FC400962E0C /* ResultController.swift */; };
+		F6F0657123C4729400962E0C /* PreparationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F0657023C4729400962E0C /* PreparationController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +30,8 @@
 		F62DB63B239E3C6F009AE655 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		F62DB63D239E3C6F009AE655 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F680F82C23BFA8A100187721 /* GameHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameHelper.swift; sourceTree = "<group>"; };
+		F6F0656E23C46FC400962E0C /* ResultController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultController.swift; sourceTree = "<group>"; };
+		F6F0657023C4729400962E0C /* PreparationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreparationController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,7 +94,9 @@
 		F680F82A23BFA83600187721 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				F6F0657023C4729400962E0C /* PreparationController.swift */,
 				F62DB633239E3C6E009AE655 /* GameController.swift */,
+				F6F0656E23C46FC400962E0C /* ResultController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -177,7 +183,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				F680F82D23BFA8A100187721 /* GameHelper.swift in Sources */,
+				F6F0657123C4729400962E0C /* PreparationController.swift in Sources */,
 				F62DB634239E3C6E009AE655 /* GameController.swift in Sources */,
+				F6F0656F23C46FC400962E0C /* ResultController.swift in Sources */,
 				F61EE7AE23AA55F000440A8C /* Tile.swift in Sources */,
 				F62DB630239E3C6E009AE655 /* AppDelegate.swift in Sources */,
 				F62DB632239E3C6E009AE655 /* SceneDelegate.swift in Sources */,

@@ -474,7 +474,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         
         if correctAnswers == Tile.shared.count {
             print("Game completed!")
-            gridLayer.isHidden = true
+            performSegue(withIdentifier: "resultSegue", sender: self)
         }
     }
     
@@ -494,6 +494,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         positionGameElements()
         addPreGameControls()
     }
+    
     
     
     @IBAction func moveTileWithPan(_ recognizer: UIPanGestureRecognizer) {

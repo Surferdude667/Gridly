@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="wdK-BW-ziU">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--Preparation Controller-->
+        <scene sceneID="PgP-QB-mlW">
+            <objects>
+                <viewController id="wdK-BW-ziU" customClass="PreparationController" customModule="Gridly" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="dqU-P3-a7a"/>
+                        <viewControllerLayoutGuide type="bottom" id="AoY-Jd-ZUk"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="KbA-hc-a98">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jEH-ef-nMf">
+                                <rect key="frame" x="161" y="433" width="92" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Layout image"/>
+                                <connections>
+                                    <action selector="startButton:" destination="wdK-BW-ziU" eventType="touchUpInside" id="W7e-5x-LQl"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    </view>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="presentation" identifier="toGameSegue" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="dRq-as-oQ3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="m5x-BJ-tNO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-604" y="138"/>
+        </scene>
         <!--Game Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -301,7 +332,7 @@
                                             </connections>
                                         </imageView>
                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="MOVES 0" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Wsa-Nb-AkT">
-                                            <rect key="frame" x="195" y="67" width="60" height="40"/>
+                                            <rect key="frame" x="177" y="66" width="60" height="40"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -309,7 +340,7 @@
                                             <size key="shadowOffset" width="0.0" height="0.0"/>
                                         </label>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="isX-sk-vle">
-                                            <rect key="frame" x="286" y="67" width="120" height="40"/>
+                                            <rect key="frame" x="271" y="65" width="120" height="40"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
@@ -329,7 +360,7 @@
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FUB-Pd-Bfu">
-                                            <rect key="frame" x="50" y="67" width="120" height="40"/>
+                                            <rect key="frame" x="23" y="66" width="120" height="40"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
@@ -345,13 +376,6 @@
                                                 <action selector="newGameButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="CBI-jM-CeU"/>
                                             </connections>
                                         </button>
-                                        <label opaque="NO" userInteractionEnabled="NO" alpha="0.80000000000000004" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Adjust the image." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MGB-N2-Evc">
-                                            <rect key="frame" x="130" y="147" width="114" height="20"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c23-kn-xTM">
                                             <rect key="frame" x="151" y="788" width="112" height="34"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -369,6 +393,13 @@
                                                 <action selector="startGameButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HQw-xi-GLu"/>
                                             </connections>
                                         </button>
+                                        <label opaque="NO" userInteractionEnabled="NO" alpha="0.80000000000000004" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Adjust the image." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MGB-N2-Evc">
+                                            <rect key="frame" x="150" y="148" width="114" height="20"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                 </view>
                                 <blurEffect style="regular"/>
@@ -442,6 +473,7 @@
                         <outletCollection property="puzzleStacks" destination="qa9-h2-FcZ" collectionClass="NSMutableArray" id="Lmz-bM-jtn"/>
                         <outletCollection property="puzzleStacks" destination="MBr-sf-LIu" collectionClass="NSMutableArray" id="rXe-VZ-2gt"/>
                         <outletCollection property="puzzleStacks" destination="rHU-Ys-4L6" collectionClass="NSMutableArray" id="6X5-0m-xA1"/>
+                        <segue destination="f7o-RQ-5fA" kind="presentation" identifier="resultSegue" modalPresentationStyle="fullScreen" id="uqT-SV-sxd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -526,7 +558,25 @@
                     </connections>
                 </panGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="137.68115942028987" y="137.94642857142856"/>
+            <point key="canvasLocation" x="133" y="138"/>
+        </scene>
+        <!--Result Controller-->
+        <scene sceneID="pBl-7s-BNI">
+            <objects>
+                <viewController id="f7o-RQ-5fA" customClass="ResultController" customModule="Gridly" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="YrL-qC-mPi"/>
+                        <viewControllerLayoutGuide type="bottom" id="xEE-TD-TQu"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="5zs-1L-6xN">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="xKq-LR-b2F" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="861" y="138"/>
         </scene>
     </scenes>
     <resources>
