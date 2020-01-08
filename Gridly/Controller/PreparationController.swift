@@ -20,7 +20,6 @@ class PreparationController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     
-    
     func troubleAlert(errorMessage: String) {
         DispatchQueue.main.async {
             let alertController = UIAlertController(title: "Bummer!", message: errorMessage, preferredStyle: .alert)
@@ -44,7 +43,6 @@ class PreparationController: UIViewController, UIImagePickerControllerDelegate, 
         let photos = UIImagePickerController.SourceType.photoLibrary
         
         if UIImagePickerController.isSourceTypeAvailable(photos) {
-            
             let status = PHPhotoLibrary.authorizationStatus()
             let noPermissionMessage = "Access denied!"
             
@@ -68,7 +66,6 @@ class PreparationController: UIViewController, UIImagePickerControllerDelegate, 
         } else {
             troubleAlert(errorMessage: "You have no photos in your library! 😢")
         }
-
     }
     
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {

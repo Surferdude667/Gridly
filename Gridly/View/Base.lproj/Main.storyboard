@@ -372,39 +372,7 @@
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
-                                                <action selector="previewButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="deW-vY-BXB"/>
-                                            </connections>
-                                        </button>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c23-kn-xTM">
-                                            <rect key="frame" x="151" y="788" width="112" height="34"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
-                                            <state key="normal" title="START GAME">
-                                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            </state>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                    <integer key="value" value="7"/>
-                                                </userDefinedRuntimeAttribute>
-                                            </userDefinedRuntimeAttributes>
-                                            <connections>
-                                                <action selector="startGameButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HQw-xi-GLu"/>
-                                            </connections>
-                                        </button>
-                                        <label opaque="NO" userInteractionEnabled="NO" alpha="0.80000000000000004" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Adjust the image." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MGB-N2-Evc">
-                                            <rect key="frame" x="150" y="148" width="114" height="20"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2rp-72-LuN">
-                                            <rect key="frame" x="20" y="20" width="28" height="28"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <state key="normal" backgroundImage="exit"/>
-                                            <connections>
-                                                <action selector="buttonExit:" destination="BYZ-38-t0r" eventType="touchUpInside" id="s5B-3R-Gur"/>
+                                                <action selector="buttonPreview:" destination="BYZ-38-t0r" eventType="touchUpInside" id="deW-vY-BXB"/>
                                             </connections>
                                         </button>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FUB-Pd-Bfu">
@@ -423,7 +391,39 @@
                                                 </userDefinedRuntimeAttribute>
                                             </userDefinedRuntimeAttributes>
                                             <connections>
-                                                <action selector="newGameButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="CBI-jM-CeU"/>
+                                                <action selector="buttonNewGame:" destination="BYZ-38-t0r" eventType="touchUpInside" id="CBI-jM-CeU"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c23-kn-xTM">
+                                            <rect key="frame" x="151" y="788" width="112" height="34"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
+                                            <state key="normal" title="START GAME">
+                                                <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </state>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                    <integer key="value" value="7"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                            <connections>
+                                                <action selector="buttonStartGame:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HQw-xi-GLu"/>
+                                            </connections>
+                                        </button>
+                                        <label opaque="NO" userInteractionEnabled="NO" alpha="0.80000000000000004" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Adjust the image." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MGB-N2-Evc">
+                                            <rect key="frame" x="150" y="171" width="114" height="20"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2rp-72-LuN">
+                                            <rect key="frame" x="193" y="137" width="28" height="28"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" backgroundImage="exit"/>
+                                            <connections>
+                                                <action selector="buttonExit:" destination="BYZ-38-t0r" eventType="touchUpInside" id="s5B-3R-Gur"/>
                                             </connections>
                                         </button>
                                     </subviews>
@@ -446,12 +446,12 @@
                     <connections>
                         <outlet property="blurView" destination="NxP-vs-r9g" id="4Ho-b8-RMO"/>
                         <outlet property="buttonExit" destination="2rp-72-LuN" id="UIb-fz-CMI"/>
+                        <outlet property="buttonNewGame" destination="FUB-Pd-Bfu" id="Soh-rr-cPg"/>
+                        <outlet property="buttonPreview" destination="isX-sk-vle" id="Jjz-0g-F1E"/>
+                        <outlet property="buttonStartGame" destination="c23-kn-xTM" id="Sot-Ep-uBC"/>
                         <outlet property="contentImage" destination="Pxt-7b-4is" id="A6D-he-l94"/>
-                        <outlet property="infoLabel" destination="MGB-N2-Evc" id="LCB-7D-Kc3"/>
-                        <outlet property="moveCountLabel" destination="Wsa-Nb-AkT" id="ypI-dS-ti8"/>
-                        <outlet property="newGameButton" destination="FUB-Pd-Bfu" id="Soh-rr-cPg"/>
-                        <outlet property="previewButton" destination="isX-sk-vle" id="Jjz-0g-F1E"/>
-                        <outlet property="startGameButton" destination="c23-kn-xTM" id="Sot-Ep-uBC"/>
+                        <outlet property="labelInfo" destination="MGB-N2-Evc" id="LCB-7D-Kc3"/>
+                        <outlet property="labelMoveCount" destination="Wsa-Nb-AkT" id="ypI-dS-ti8"/>
                         <outletCollection property="puzzleDestinations" destination="edx-3b-Hb0" collectionClass="NSMutableArray" id="ISs-j4-hdC"/>
                         <outletCollection property="puzzleDestinations" destination="d8B-lO-zT8" collectionClass="NSMutableArray" id="q3h-KX-CVU"/>
                         <outletCollection property="puzzleDestinations" destination="7q9-ip-Qag" collectionClass="NSMutableArray" id="Xi8-T0-GfH"/>
