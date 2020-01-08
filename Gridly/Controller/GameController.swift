@@ -29,8 +29,14 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     @IBOutlet weak var startGameButton: UIButton!
     @IBOutlet weak var newGameButton: UIButton!
     @IBOutlet weak var previewButton: UIButton!
+    @IBOutlet weak var buttonExit: UIButton!
     
     func configure() {
+        
+        if let gameImage = Tile.originalImage {
+            contentImage.image = gameImage
+        }
+        
         blurView.effect = nil
         Tile.shared.removeAll()
         configureTapGestures()
@@ -197,6 +203,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         self.view.addSubview(preGameControlsView)
         preGameControlsView.addSubview(startGameButton)
         preGameControlsView.addSubview(infoLabel)
+        preGameControlsView.addSubview(buttonExit)
     }
     
     
@@ -277,7 +284,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         puzzleStacks.shuffle()
         
         for i in 0..<puzzleTiles.count {
-            puzzleTiles[i].image = Tile.shared[i].tileImage
+            puzzleTiles[i].image = Tile.shared[i].renderedTileImage
             puzzleTiles[i].tag = Tile.shared[i].id
             Tile.shared[i].stackPairID = puzzleStacks[i].tag
         }
@@ -407,8 +414,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     
     func positionPreGameElements() {
         
-        //  Check device and orintation to adjust mask size
-        //  All other UI elements adjusts itself based on maske size
+        
         if UIScreen.main.bounds.height < UIScreen.main.bounds.width {
             
             //  iPad Landscape
@@ -423,7 +429,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
             //  iPhone Landscape
             if UIDevice.current.userInterfaceIdiom == .phone {
                 infoLabel.frame.origin.x = squarePath.bounds.origin.x - infoLabel.bounds.width - 30
-                infoLabel.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height / 2 - infoLabel.bounds.height / 2
+                infoLabel.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height / 2 + 10
                 
                 startGameButton.frame.origin.x = squarePath.bounds.origin.x + squarePath.bounds.width + 30
                 startGameButton.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height / 2 - startGameButton.bounds.height / 2
@@ -438,6 +444,8 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
             startGameButton.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height + 30
         }
         
+        buttonExit.frame.origin.x = infoLabel.frame.origin.x + infoLabel.bounds.width / 2 - buttonExit.bounds.width / 2
+        buttonExit.frame.origin.y = infoLabel.frame.origin.y - 40
     }
     
     
@@ -446,7 +454,6 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         
         //  Landscape
         if UIScreen.main.bounds.height < UIScreen.main.bounds.width {
-            
             newGameButton.frame.origin.x = squarePath.bounds.origin.x - newGameButton.bounds.width - 20
             newGameButton.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height / 4
             
@@ -456,9 +463,8 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
             previewButton.frame.origin.x = squarePath.bounds.origin.x - previewButton.bounds.width - 20
             previewButton.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height / 4 * 3 - previewButton.bounds.height
             
-            //  Portrait
+        //  Portrait
         } else if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
-            
             newGameButton.frame.origin.x = squarePath.bounds.origin.x
             newGameButton.frame.origin.y = squarePath.bounds.origin.y - 65
             
@@ -468,7 +474,6 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
             previewButton.frame.origin.x = squarePath.bounds.origin.x + squarePath.bounds.width - previewButton.bounds.width
             previewButton.frame.origin.y = squarePath.bounds.origin.y - 65
         }
-        
     }
     
     
@@ -582,4 +587,9 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     @IBAction func startGameButton(_ sender: Any) {
         createPuzzle()
     }
+    
+    @IBAction func buttonExit(_ sender: Any) {
+        dismiss(animated: true, completion: nil)
+    }
+    
 }

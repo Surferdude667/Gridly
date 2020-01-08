@@ -19,11 +19,27 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jEH-ef-nMf">
-                                <rect key="frame" x="161" y="433" width="92" height="30"/>
+                                <rect key="frame" x="162" y="433" width="90" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Layout image"/>
+                                <state key="normal" title="Pick Random"/>
                                 <connections>
-                                    <action selector="startButton:" destination="wdK-BW-ziU" eventType="touchUpInside" id="W7e-5x-LQl"/>
+                                    <action selector="buttonPickRandom:" destination="wdK-BW-ziU" eventType="touchUpInside" id="W7e-5x-LQl"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="auA-oW-vOq">
+                                <rect key="frame" x="97" y="562" width="92" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Photo Library"/>
+                                <connections>
+                                    <action selector="buttonPhotoLibrary:" destination="wdK-BW-ziU" eventType="touchUpInside" id="9RC-Rl-641"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pPv-BX-54I">
+                                <rect key="frame" x="264" y="562" width="54" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Camera"/>
+                                <connections>
+                                    <action selector="buttonCamera:" destination="wdK-BW-ziU" eventType="touchUpInside" id="P3w-L8-HXR"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -359,23 +375,6 @@
                                                 <action selector="previewButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="deW-vY-BXB"/>
                                             </connections>
                                         </button>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FUB-Pd-Bfu">
-                                            <rect key="frame" x="23" y="66" width="120" height="40"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="12"/>
-                                            <state key="normal" title="NEW GAME">
-                                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            </state>
-                                            <userDefinedRuntimeAttributes>
-                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                                    <integer key="value" value="7"/>
-                                                </userDefinedRuntimeAttribute>
-                                            </userDefinedRuntimeAttributes>
-                                            <connections>
-                                                <action selector="newGameButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="CBI-jM-CeU"/>
-                                            </connections>
-                                        </button>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c23-kn-xTM">
                                             <rect key="frame" x="151" y="788" width="112" height="34"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -400,6 +399,33 @@
                                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2rp-72-LuN">
+                                            <rect key="frame" x="20" y="20" width="28" height="28"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" backgroundImage="exit"/>
+                                            <connections>
+                                                <action selector="buttonExit:" destination="BYZ-38-t0r" eventType="touchUpInside" id="s5B-3R-Gur"/>
+                                            </connections>
+                                        </button>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FUB-Pd-Bfu">
+                                            <rect key="frame" x="20" y="65" width="120" height="40"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                            <inset key="titleEdgeInsets" minX="-45" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                            <inset key="imageEdgeInsets" minX="87" minY="11" maxX="14" maxY="11"/>
+                                            <state key="normal" title="NEW GAME" image="exit">
+                                                <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            </state>
+                                            <userDefinedRuntimeAttributes>
+                                                <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                    <integer key="value" value="7"/>
+                                                </userDefinedRuntimeAttribute>
+                                            </userDefinedRuntimeAttributes>
+                                            <connections>
+                                                <action selector="newGameButton:" destination="BYZ-38-t0r" eventType="touchUpInside" id="CBI-jM-CeU"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                 </view>
                                 <blurEffect style="regular"/>
@@ -419,6 +445,7 @@
                     </view>
                     <connections>
                         <outlet property="blurView" destination="NxP-vs-r9g" id="4Ho-b8-RMO"/>
+                        <outlet property="buttonExit" destination="2rp-72-LuN" id="UIb-fz-CMI"/>
                         <outlet property="contentImage" destination="Pxt-7b-4is" id="A6D-he-l94"/>
                         <outlet property="infoLabel" destination="MGB-N2-Evc" id="LCB-7D-Kc3"/>
                         <outlet property="moveCountLabel" destination="Wsa-Nb-AkT" id="ypI-dS-ti8"/>
@@ -581,6 +608,7 @@
     </scenes>
     <resources>
         <image name="background" width="5120" height="2880"/>
+        <image name="exit" width="28" height="28"/>
         <image name="eye_black" width="512" height="512"/>
     </resources>
 </document>
