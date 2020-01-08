@@ -24,16 +24,16 @@ class PreparationController: UIViewController, UIImagePickerControllerDelegate, 
         DispatchQueue.main.async {
             let alertController = UIAlertController(title: "Oops! 😓", message: errorMessage, preferredStyle: .alert)
             
-            let confirmAction = UIAlertAction(title: "Settings", style: .default, handler: { (success) in
-                UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
-            })
+            let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
+            alertController.addAction(cancelAction)
             
             if linkToSettings {
-                let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
-                alertController.addAction(cancelAction)
+                let settingsAction = UIAlertAction(title: "Settings", style: .default, handler: { (success) in
+                    UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+                })
+                
+                alertController.addAction(settingsAction)
             }
-            
-            alertController.addAction(confirmAction)
             self.present(alertController, animated: true)
         }
     }
@@ -149,6 +149,7 @@ class PreparationController: UIViewController, UIImagePickerControllerDelegate, 
         }
     }
     
+    @IBAction func unwindAction(unwindSegue: UIStoryboardSegue) {}
     
     @IBAction func buttonPickRandom(_ sender: Any) {
         processedPicked(image: chooseRandomImage())

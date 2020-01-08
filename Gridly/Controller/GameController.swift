@@ -139,12 +139,21 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func createPuzzle() {
-        print("Loading...")
-        renderPuzzleImage()
-        renderPuzzleTiles()
-        addTilesToViews()
-        GameHelper.fitViews(views: puzzleTiles, startPosition: CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y), offset: squarePath.bounds.width / 4)
-        animateTilesToStack()
+        labelInfo.text = "Loading puzzle 🤩"
+        
+        //  TODO: This should use a completion handler instead...
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.renderPuzzleImage()
+            print("1")
+            self.renderPuzzleTiles()
+            print("2")
+            self.addTilesToViews()
+            print("3")
+            GameHelper.fitViews(views: self.puzzleTiles, startPosition: CGPoint(x: self.squarePath.bounds.origin.x, y: self.squarePath.bounds.origin.y), offset: self.squarePath.bounds.width / 4)
+            print("4")
+            self.animateTilesToStack()
+            print("5")
+        }
     }
     
     @objc func moveImage(_ sender: UIPanGestureRecognizer) {
@@ -207,17 +216,19 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func renderPuzzleImage() {
+        print("renderPuzzleImage")
         let renderer = UIGraphicsImageRenderer(bounds: squarePath.bounds)
         let image = renderer.image { (context) in
             gridLayer.isHidden = true
             view.drawHierarchy(in: view.bounds, afterScreenUpdates: true)
         }
-        Tile.image = image
+        Tile.croppedImage = image
         gridLayer.isHidden = false
     }
     
     
     func renderPuzzleTiles() {
+        print("renderPuzzleTile")
         var tileId = 0
         var yOffset: CGFloat = 0.0
         var xOffset: CGFloat = 0.0
@@ -225,6 +236,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         
         for _ in 0..<4 {
             for _ in 0..<4 {
+                print("Rendering tile: \(tileId + 1)")
                 let tileSize = CGRect(x: squarePath.bounds.origin.x + xOffset, y: squarePath.bounds.origin.y + yOffset, width: squarePath.bounds.width / 4, height: squarePath.bounds.height / 4)
                 let tileRendere = UIGraphicsImageRenderer(bounds: tileSize)
                 
@@ -291,7 +303,6 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func animateTilesToStack() {
-        print("Loading completed!")
         for i in 0..<puzzleTiles.count {
             UIView.animate(withDuration: 1.5, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 2.0, options: [], animations: {
                 self.puzzleTiles[i].bounds.size = self.puzzleStacks[i].bounds.size
@@ -352,19 +363,29 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func updateViewPositions() {
-        
         //  Update destination positions.
         GameHelper.fitViews(views: puzzleDestinations, startPosition: CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y), offset: squarePath.bounds.width / 4)
         
-        //  Update stacks positions.
+        //  Update stack positions.
         //  Landscape
         if UIScreen.main.bounds.height < UIScreen.main.bounds.width {
             positionPuzzleStacks(rows: 8.0, startPosition: CGPoint(x: squarePath.bounds.origin.x + squarePath.bounds.width + 20, y: squarePath.bounds.origin.y))
+            //  Portrait
         } else {
             positionPuzzleStacks(rows: 2.0, startPosition: CGPoint(x: squarePath.bounds.origin.x, y: squarePath.bounds.origin.y + squarePath.bounds.height + 20))
         }
         
         //  Update tiles positions.
+        updateTilePositions()
+        
+        //  Update Game Controls and PreGame controls.
+        gameControlsView.frame = view.frame
+        preGameControlsView.frame = view.frame
+        positionPreGameElements()
+        positionGameElements()
+    }
+    
+    func updateTilePositions() {
         for i in 0..<Tile.shared.count {
             if Tile.shared[i].puzzlePositionInGrid != nil {
                 let ID = Tile.shared[i].puzzlePositionInGrid
@@ -378,13 +399,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
                 }
             }
         }
-        
-        //  Update Game Controls and PreGame controls.
-        gameControlsView.frame = view.frame
-        positionPreGameElements()
-        positionGameElements()
     }
-    
     
     func positionPuzzleStacks(rows: CGFloat, startPosition: CGPoint) {
         let seats: CGFloat = CGFloat(Int(puzzleStacks.count))
@@ -526,6 +541,13 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    //  TODO: Pass image with segue insted of Singlton approach.
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.destination is ResultController {
+            let vc = segue.destination as? ResultController
+            vc?.score = "Score: \(moveCount)"
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -411,13 +411,6 @@
                                                 <action selector="buttonStartGame:" destination="BYZ-38-t0r" eventType="touchUpInside" id="HQw-xi-GLu"/>
                                             </connections>
                                         </button>
-                                        <label opaque="NO" userInteractionEnabled="NO" alpha="0.80000000000000004" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Adjust the image." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MGB-N2-Evc">
-                                            <rect key="frame" x="150" y="171" width="114" height="20"/>
-                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
                                         <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2rp-72-LuN">
                                             <rect key="frame" x="193" y="137" width="28" height="28"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -426,6 +419,13 @@
                                                 <action selector="buttonExit:" destination="BYZ-38-t0r" eventType="touchUpInside" id="s5B-3R-Gur"/>
                                             </connections>
                                         </button>
+                                        <label opaque="NO" userInteractionEnabled="NO" alpha="0.80000000000000004" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Adjust the image." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="MGB-N2-Evc">
+                                            <rect key="frame" x="146" y="173" width="123" height="20"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                            <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
                                     </subviews>
                                 </view>
                                 <blurEffect style="regular"/>
@@ -500,7 +500,7 @@
                         <outletCollection property="puzzleStacks" destination="qa9-h2-FcZ" collectionClass="NSMutableArray" id="Lmz-bM-jtn"/>
                         <outletCollection property="puzzleStacks" destination="MBr-sf-LIu" collectionClass="NSMutableArray" id="rXe-VZ-2gt"/>
                         <outletCollection property="puzzleStacks" destination="rHU-Ys-4L6" collectionClass="NSMutableArray" id="6X5-0m-xA1"/>
-                        <segue destination="f7o-RQ-5fA" kind="presentation" identifier="resultSegue" modalPresentationStyle="fullScreen" id="uqT-SV-sxd"/>
+                        <segue destination="f7o-RQ-5fA" kind="presentation" identifier="resultSegue" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="uqT-SV-sxd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -585,7 +585,7 @@
                     </connections>
                 </panGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="133" y="138"/>
+            <point key="canvasLocation" x="131.8840579710145" y="137.94642857142856"/>
         </scene>
         <!--Result Controller-->
         <scene sceneID="pBl-7s-BNI">
@@ -598,12 +598,46 @@
                     <view key="view" contentMode="scaleToFill" id="5zs-1L-6xN">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="67U-0u-oMj">
+                                <rect key="frame" x="82" y="323" width="250" height="250"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jNH-hd-i8P">
+                                <rect key="frame" x="166" y="593" width="83" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Share result"/>
+                                <connections>
+                                    <action selector="buttonShare:" destination="f7o-RQ-5fA" eventType="touchUpInside" id="LJb-G0-sY8"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Score" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Kp-f3-YQ8">
+                                <rect key="frame" x="186" y="235" width="161" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="74W-xS-Tzf">
+                                <rect key="frame" x="173" y="733" width="71" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="new game"/>
+                                <connections>
+                                    <segue destination="yhB-yB-9GQ" kind="unwind" unwindAction="unwindActionWithUnwindSegue:" id="Ds7-nd-iVb"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                     </view>
+                    <connections>
+                        <outlet property="resultImage" destination="67U-0u-oMj" id="3lq-Ml-v5A"/>
+                        <outlet property="resultScore" destination="3Kp-f3-YQ8" id="RS3-yi-hpa"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xKq-LR-b2F" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="yhB-yB-9GQ" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="861" y="138"/>
+            <point key="canvasLocation" x="860.86956521739137" y="137.94642857142856"/>
         </scene>
     </scenes>
     <resources>
