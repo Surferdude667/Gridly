@@ -190,19 +190,21 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func addGameControls() {
+        //  Add Pre Game Controls to view hierarchy
         preGameControlsView.frame = view.frame
         view.insertSubview(preGameControlsView, at: 2)
         preGameControlsView.addSubview(buttonStartGame)
         preGameControlsView.addSubview(labelInfo)
         preGameControlsView.addSubview(buttonExit)
         
+        //  Add Game Controls to view hierarchy
         gameControlsView.frame = view.frame
         view.insertSubview(gameControlsView, at: 3)
         gameControlsView.addSubview(buttonNewGame)
         gameControlsView.addSubview(labelMoveCount)
         gameControlsView.addSubview(buttonPreview)
     }
-        
+    
     
     func renderPuzzleImage() {
         let renderer = UIGraphicsImageRenderer(bounds: squarePath.bounds)

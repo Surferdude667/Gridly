@@ -11,7 +11,7 @@ import Photos
 import AVFoundation
 
 class PreparationController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
-
+    
     var localImages = [UIImage]()
     
     override func viewDidLoad() {
@@ -20,10 +20,19 @@ class PreparationController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     
-    func troubleAlert(errorMessage: String) {
+    func troubleAlert(errorMessage: String, linkToSettings: Bool) {
         DispatchQueue.main.async {
-            let alertController = UIAlertController(title: "Bummer!", message: errorMessage, preferredStyle: .alert)
-            let confirmAction = UIAlertAction(title: "Got it..", style: .cancel)
+            let alertController = UIAlertController(title: "Oops! 😓", message: errorMessage, preferredStyle: .alert)
+            
+            let confirmAction = UIAlertAction(title: "Settings", style: .default, handler: { (success) in
+                UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
+            })
+            
+            if linkToSettings {
+                let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
+                alertController.addAction(cancelAction)
+            }
+            
             alertController.addAction(confirmAction)
             self.present(alertController, animated: true)
         }
@@ -44,27 +53,27 @@ class PreparationController: UIViewController, UIImagePickerControllerDelegate, 
         
         if UIImagePickerController.isSourceTypeAvailable(photos) {
             let status = PHPhotoLibrary.authorizationStatus()
-            let noPermissionMessage = "Access denied!"
+            let noPermissionMessage = "We don't have access to your photos."
             
             switch status {
             case .authorized:
                 presentImagePicker(sourceType: photos)
             case .denied, .restricted:
-                troubleAlert(errorMessage: noPermissionMessage)
+                troubleAlert(errorMessage: noPermissionMessage, linkToSettings: true)
             case .notDetermined:
                 PHPhotoLibrary.requestAuthorization({(newStatus) in
                     if newStatus == .authorized {
                         self.presentImagePicker(sourceType: photos)
                     } else {
-                        self.troubleAlert(errorMessage: noPermissionMessage)
+                        self.troubleAlert(errorMessage: noPermissionMessage, linkToSettings: true)
                     }
                 })
             default:
-                print("Unknown error!")
+                troubleAlert(errorMessage: "We can't access your photos. Maybe you didn't give us access?", linkToSettings: true)
             }
             
         } else {
-            troubleAlert(errorMessage: "You have no photos in your library! 😢")
+            troubleAlert(errorMessage: "You don't seem to have any photos in your library.", linkToSettings: false)
         }
     }
     
@@ -81,47 +90,45 @@ class PreparationController: UIViewController, UIImagePickerControllerDelegate, 
         if UIImagePickerController.isSourceTypeAvailable(sourceType) {
             
             let status = AVCaptureDevice.authorizationStatus(for: AVMediaType.video)
-            
             let noPermissionMessage = "No permission to camera."
             
             switch status {
             case .authorized:
-                print("Full access to camera!")
                 self.presentImagePicker(sourceType: sourceType)
             case .denied, .restricted:
-                print("No access to camera!")
+                troubleAlert(errorMessage: noPermissionMessage, linkToSettings: true)
             case .notDetermined:
                 AVCaptureDevice.requestAccess(for: AVMediaType.video, completionHandler: { (granted) in
                     if granted {
                         self.presentImagePicker(sourceType: sourceType)
                     } else {
-                        self.troubleAlert(errorMessage: noPermissionMessage)
+                        self.troubleAlert(errorMessage: noPermissionMessage, linkToSettings: true)
                     }
                 })
             default:
-                print("Unknown error!")
+                troubleAlert(errorMessage: "We can't access your camera. Maybe you didn't give us access?", linkToSettings: true)
             }
         } else {
-            troubleAlert(errorMessage: "Can't access camera.")
+            troubleAlert(errorMessage: "There was a problem with your camera.", linkToSettings: false)
         }
     }
     
     func chooseRandomImage() -> UIImage? {
         let currentImage = Tile.originalImage
-         
-         if localImages.count > 0 {
-             while true {
-                 
-                 let randomIndex = Int.random(in: 0..<localImages.count)
-                 let newImage = localImages[randomIndex]
-                 
-                 if newImage != currentImage {
-                     return newImage
-                 }
-             }
-         }
-         return nil
-     }
+        
+        if localImages.count > 0 {
+            while true {
+                
+                let randomIndex = Int.random(in: 0..<localImages.count)
+                let newImage = localImages[randomIndex]
+                
+                if newImage != currentImage {
+                    return newImage
+                }
+            }
+        }
+        return nil
+    }
     
     func collectLocalImages() {
         localImages.removeAll()
@@ -141,7 +148,7 @@ class PreparationController: UIViewController, UIImagePickerControllerDelegate, 
             performSegue(withIdentifier: "toGameSegue", sender: self)
         }
     }
-        
+    
     
     @IBAction func buttonPickRandom(_ sender: Any) {
         processedPicked(image: chooseRandomImage())
