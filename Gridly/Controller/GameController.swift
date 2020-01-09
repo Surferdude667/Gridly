@@ -144,17 +144,13 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         //  TODO: This should use a completion handler instead...
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             self.renderPuzzleImage()
-            print("1")
             self.renderPuzzleTiles()
-            print("2")
             self.addTilesToViews()
-            print("3")
             GameHelper.fitViews(views: self.puzzleTiles, startPosition: CGPoint(x: self.squarePath.bounds.origin.x, y: self.squarePath.bounds.origin.y), offset: self.squarePath.bounds.width / 4)
-            print("4")
             self.animateTilesToStack()
-            print("5")
         }
     }
+    
     
     @objc func moveImage(_ sender: UIPanGestureRecognizer) {
         let translation = sender.translation(in: contentImage.superview)
@@ -216,7 +212,6 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func renderPuzzleImage() {
-        print("renderPuzzleImage")
         let renderer = UIGraphicsImageRenderer(bounds: squarePath.bounds)
         let image = renderer.image { (context) in
             gridLayer.isHidden = true
@@ -228,7 +223,6 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func renderPuzzleTiles() {
-        print("renderPuzzleTile")
         var tileId = 0
         var yOffset: CGFloat = 0.0
         var xOffset: CGFloat = 0.0
@@ -236,7 +230,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         
         for _ in 0..<4 {
             for _ in 0..<4 {
-                print("Rendering tile: \(tileId + 1)")
+                print("Rendering tile: \(tileId)")
                 let tileSize = CGRect(x: squarePath.bounds.origin.x + xOffset, y: squarePath.bounds.origin.y + yOffset, width: squarePath.bounds.width / 4, height: squarePath.bounds.height / 4)
                 let tileRendere = UIGraphicsImageRenderer(bounds: tileSize)
                 
@@ -251,6 +245,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
             xOffset = 0.0
             yOffset += offsetCalculation
         }
+        print("DONE!")
     }
     
     
@@ -378,7 +373,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         //  Update tiles positions.
         updateTilePositions()
         
-        //  Update Game Controls and PreGame controls.
+        //  Update Game Controls and Pre-Game controls.
         gameControlsView.frame = view.frame
         preGameControlsView.frame = view.frame
         positionPreGameElements()

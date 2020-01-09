@@ -12,11 +12,105 @@ import AVFoundation
 
 class PreparationController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
+    @IBOutlet weak var buttonPickRandom: UIButton!
+    
     var localImages = [UIImage]()
+    
+    
+    // --------------------------------------
+    
+    
+    private var compactConstraints: [NSLayoutConstraint] = []
+    private var regularConstraints: [NSLayoutConstraint] = []
+    private var sharedConstraints: [NSLayoutConstraint] = []
+    
+    
+    private lazy var viewContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+
+    private lazy var randomButton: UIButton = {
+        let randomButton = UIButton(type: .system)
+        randomButton.translatesAutoresizingMaskIntoConstraints = false
+        randomButton.backgroundColor = UIColor.green
+        randomButton.setTitle("Button", for: .normal)
+        randomButton.addTarget(self, action: #selector(randomImage), for: UIControl.Event.touchUpInside)
+        
+        return randomButton
+    }()
+
+    
+    func setupUI() {
+        buttonPickRandom.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(viewContainer)
+        viewContainer.addSubview(randomButton)
+    }
+    
+    func setupConstraints() {
+        sharedConstraints.append(contentsOf: [
+            viewContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 15),
+            viewContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -15),
+            viewContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
+            viewContainer.topAnchor.constraint(equalTo: view.topAnchor, constant: 15),
+            
+        ])
+
+        regularConstraints.append(contentsOf: [
+            randomButton.topAnchor.constraint(equalTo: viewContainer.topAnchor),
+            randomButton.leftAnchor.constraint(equalTo: viewContainer.leftAnchor),
+            randomButton.widthAnchor.constraint(equalTo: viewContainer.widthAnchor)
+        ])
+
+        compactConstraints.append(contentsOf: [
+            randomButton.bottomAnchor.constraint(equalTo: viewContainer.bottomAnchor),
+            randomButton.leftAnchor.constraint(equalTo: viewContainer.leftAnchor),
+            randomButton.widthAnchor.constraint(equalTo: viewContainer.widthAnchor)
+        ])
+    }
+    
+    
+    func layoutTrait(traitCollection:UITraitCollection) {
+        if (!sharedConstraints[0].isActive) {
+           // activating shared constraints
+           NSLayoutConstraint.activate(sharedConstraints)
+        }
+        if traitCollection.horizontalSizeClass == .compact && traitCollection.verticalSizeClass == .regular {
+            if regularConstraints.count > 0 && regularConstraints[0].isActive {
+                NSLayoutConstraint.deactivate(regularConstraints)
+            }
+            // activating compact constraints
+            NSLayoutConstraint.activate(compactConstraints)
+        } else {
+            if compactConstraints.count > 0 && compactConstraints[0].isActive {
+                NSLayoutConstraint.deactivate(compactConstraints)
+            }
+            // activating regular constraints
+            NSLayoutConstraint.activate(regularConstraints)
+        }
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        layoutTrait(traitCollection: traitCollection)
+    }
+    
+    
+    // --------------------------------------
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         collectLocalImages()
+        
+        setupUI()
+        setupConstraints()
+
+        NSLayoutConstraint.activate(sharedConstraints)
+        layoutTrait(traitCollection: UIScreen.main.traitCollection)
+        
     }
     
     
@@ -113,7 +207,7 @@ class PreparationController: UIViewController, UIImagePickerControllerDelegate, 
         }
     }
     
-    func chooseRandomImage() -> UIImage? {
+    @objc func chooseRandomImage() -> UIImage? {
         let currentImage = Tile.originalImage
         
         if localImages.count > 0 {
@@ -141,6 +235,9 @@ class PreparationController: UIViewController, UIImagePickerControllerDelegate, 
         }
     }
     
+    @objc func randomImage() {
+        processedPicked(image: chooseRandomImage())
+    }
     
     func processedPicked(image: UIImage?) {
         if let newImage = image {

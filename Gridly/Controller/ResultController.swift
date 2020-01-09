@@ -23,8 +23,17 @@ class ResultController: UIViewController {
         if let image = Tile.croppedImage {
             resultImage.image = image
         }
-        
     }
+    
+    func updateUI() {
+        resultImage.translatesAutoresizingMaskIntoConstraints = false
+        resultImage.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+    }
+    
+    override func viewDidLayoutSubviews() {
+        updateUI()
+    }
+    
     
     func displaySharingOptions() {
         let message = score
