@@ -15,11 +15,8 @@ class PreparationController: UIViewController, UIImagePickerControllerDelegate, 
     @IBOutlet weak var buttonPickRandom: UIButton!
     
     var localImages = [UIImage]()
-    
-    
-    // --------------------------------------
-    
-    
+    var buttonWidth: CGFloat = 150.0
+    var buttonHeight: CGFloat = 40.0
     private var compactConstraints: [NSLayoutConstraint] = []
     private var regularConstraints: [NSLayoutConstraint] = []
     private var sharedConstraints: [NSLayoutConstraint] = []
@@ -32,20 +29,68 @@ class PreparationController: UIViewController, UIImagePickerControllerDelegate, 
     }()
 
     private lazy var randomButton: UIButton = {
-        let randomButton = UIButton(type: .system)
+        let randomButton = UIButton(type: .custom)
         randomButton.translatesAutoresizingMaskIntoConstraints = false
-        randomButton.backgroundColor = UIColor.green
-        randomButton.setTitle("Button", for: .normal)
         randomButton.addTarget(self, action: #selector(randomImage), for: UIControl.Event.touchUpInside)
+        randomButton.setTitle("Random", for: .normal)
+        randomButton.titleLabel?.font = .boldSystemFont(ofSize: 14.0)
+        randomButton.backgroundColor = UIColor.gray
+        randomButton.imageView?.contentMode = .scaleAspectFit
+        randomButton.layer.cornerRadius = 7.0
+        randomButton.setTitleColor(UIColor.black, for: .normal)
+        randomButton.setTitleColor(UIColor.white, for: .highlighted)
+        randomButton.setImage(UIImage(named: "eye_black"), for: .normal)
+        randomButton.setImage(UIImage(named: "eye_white"), for: .highlighted)
+        randomButton.imageEdgeInsets = UIEdgeInsets(top: 2, left: 0, bottom: 2, right: 80)
+        randomButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: -40, bottom: 0, right: 0)
         
         return randomButton
+    }()
+    
+    private lazy var libraryButton: UIButton = {
+        let libraryButton = UIButton(type: .custom)
+        libraryButton.translatesAutoresizingMaskIntoConstraints = false
+        libraryButton.addTarget(self, action: #selector(displayLibrary), for: UIControl.Event.touchUpInside)
+        libraryButton.setTitle("Library", for: .normal)
+        libraryButton.titleLabel?.font = .boldSystemFont(ofSize: 14.0)
+        libraryButton.backgroundColor = UIColor.gray
+        libraryButton.imageView?.contentMode = .scaleAspectFit
+        libraryButton.layer.cornerRadius = 7.0
+        libraryButton.setTitleColor(UIColor.black, for: .normal)
+        libraryButton.setTitleColor(UIColor.white, for: .highlighted)
+        libraryButton.setImage(UIImage(named: "eye_black"), for: .normal)
+        libraryButton.setImage(UIImage(named: "eye_white"), for: .highlighted)
+        libraryButton.imageEdgeInsets = UIEdgeInsets(top: 2, left: 0, bottom: 2, right: 80)
+        libraryButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: -40, bottom: 0, right: 0)
+        
+        return libraryButton
+    }()
+    
+    private lazy var cameraButton: UIButton = {
+        let cameraButton = UIButton(type: .custom)
+        cameraButton.translatesAutoresizingMaskIntoConstraints = false
+        cameraButton.addTarget(self, action: #selector(displayCamera), for: UIControl.Event.touchUpInside)
+        cameraButton.setTitle("Camera", for: .normal)
+        cameraButton.titleLabel?.font = .boldSystemFont(ofSize: 14.0)
+        cameraButton.backgroundColor = UIColor.gray
+        cameraButton.imageView?.contentMode = .scaleAspectFit
+        cameraButton.layer.cornerRadius = 7.0
+        cameraButton.setTitleColor(UIColor.black, for: .normal)
+        cameraButton.setTitleColor(UIColor.white, for: .highlighted)
+        cameraButton.setImage(UIImage(named: "eye_black"), for: .normal)
+        cameraButton.setImage(UIImage(named: "eye_white"), for: .highlighted)
+        cameraButton.imageEdgeInsets = UIEdgeInsets(top: 2, left: 0, bottom: 2, right: 80)
+        cameraButton.titleEdgeInsets = UIEdgeInsets(top: 0, left: -40, bottom: 0, right: 0)
+        
+        return cameraButton
     }()
 
     
     func setupUI() {
-        buttonPickRandom.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(viewContainer)
         viewContainer.addSubview(randomButton)
+        viewContainer.addSubview(libraryButton)
+        viewContainer.addSubview(cameraButton)
     }
     
     func setupConstraints() {
@@ -55,18 +100,44 @@ class PreparationController: UIViewController, UIImagePickerControllerDelegate, 
             viewContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -15),
             viewContainer.topAnchor.constraint(equalTo: view.topAnchor, constant: 15),
             
+            randomButton.topAnchor.constraint(equalTo: viewContainer.topAnchor),
+            randomButton.centerXAnchor.constraint(equalTo: viewContainer.centerXAnchor),
+            randomButton.widthAnchor.constraint(equalToConstant: buttonWidth),
+            randomButton.heightAnchor.constraint(equalToConstant: buttonHeight),
+            
+            libraryButton.topAnchor.constraint(equalTo: randomButton.bottomAnchor),
+            libraryButton.centerXAnchor.constraint(equalTo: viewContainer.centerXAnchor),
+            libraryButton.widthAnchor.constraint(equalToConstant: buttonWidth),
+            libraryButton.heightAnchor.constraint(equalToConstant: buttonHeight),
+            
+            cameraButton.topAnchor.constraint(equalTo: libraryButton.bottomAnchor),
+            cameraButton.centerXAnchor.constraint(equalTo: viewContainer.centerXAnchor),
+            cameraButton.widthAnchor.constraint(equalToConstant: buttonWidth),
+            cameraButton.heightAnchor.constraint(equalToConstant: buttonHeight),
         ])
 
         regularConstraints.append(contentsOf: [
-            randomButton.topAnchor.constraint(equalTo: viewContainer.topAnchor),
-            randomButton.leftAnchor.constraint(equalTo: viewContainer.leftAnchor),
-            randomButton.widthAnchor.constraint(equalTo: viewContainer.widthAnchor)
+//            randomButton.topAnchor.constraint(equalTo: viewContainer.topAnchor),
+//            randomButton.centerXAnchor.constraint(equalTo: viewContainer.centerXAnchor),
+//            randomButton.widthAnchor.constraint(equalToConstant: 150),
+//            randomButton.heightAnchor.constraint(equalToConstant: 40)
         ])
 
         compactConstraints.append(contentsOf: [
-            randomButton.bottomAnchor.constraint(equalTo: viewContainer.bottomAnchor),
-            randomButton.leftAnchor.constraint(equalTo: viewContainer.leftAnchor),
-            randomButton.widthAnchor.constraint(equalTo: viewContainer.widthAnchor)
+//            randomButton.bottomAnchor.constraint(equalTo: viewContainer.bottomAnchor),
+//            randomButton.centerXAnchor.constraint(equalTo: viewContainer.centerXAnchor),
+//            randomButton.widthAnchor.constraint(equalToConstant: 150),
+//            randomButton.heightAnchor.constraint(equalToConstant: 40),
+//
+//            libraryButton.bottomAnchor.constraint(equalTo: viewContainer.bottomAnchor),
+//            libraryButton.centerXAnchor.constraint(equalTo: viewContainer.centerXAnchor),
+//            libraryButton.widthAnchor.constraint(equalToConstant: 150),
+//            libraryButton.heightAnchor.constraint(equalToConstant: 40),
+//
+//            cameraButton.bottomAnchor.constraint(equalTo: viewContainer.bottomAnchor),
+//            cameraButton.centerXAnchor.constraint(equalTo: viewContainer.centerXAnchor),
+//            cameraButton.widthAnchor.constraint(equalToConstant: 150),
+//            cameraButton.heightAnchor.constraint(equalToConstant: 40),
         ])
     }
     
@@ -96,23 +167,18 @@ class PreparationController: UIViewController, UIImagePickerControllerDelegate, 
         layoutTrait(traitCollection: traitCollection)
     }
     
-    
-    // --------------------------------------
-    
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        collectLocalImages()
-        
-        setupUI()
-        setupConstraints()
-
-        NSLayoutConstraint.activate(sharedConstraints)
-        layoutTrait(traitCollection: UIScreen.main.traitCollection)
-        
+        configure()
     }
     
+    func configure() {
+        collectLocalImages()
+        setupUI()
+        setupConstraints()
+        NSLayoutConstraint.activate(sharedConstraints)
+        layoutTrait(traitCollection: UIScreen.main.traitCollection)
+    }
     
     func troubleAlert(errorMessage: String, linkToSettings: Bool) {
         DispatchQueue.main.async {
@@ -140,37 +206,7 @@ class PreparationController: UIViewController, UIImagePickerControllerDelegate, 
             self.present(imagePicker, animated: true, completion: nil)
         }
     }
-    
-    func displayLibrary() {
         
-        let photos = UIImagePickerController.SourceType.photoLibrary
-        
-        if UIImagePickerController.isSourceTypeAvailable(photos) {
-            let status = PHPhotoLibrary.authorizationStatus()
-            let noPermissionMessage = "We don't have access to your photos."
-            
-            switch status {
-            case .authorized:
-                presentImagePicker(sourceType: photos)
-            case .denied, .restricted:
-                troubleAlert(errorMessage: noPermissionMessage, linkToSettings: true)
-            case .notDetermined:
-                PHPhotoLibrary.requestAuthorization({(newStatus) in
-                    if newStatus == .authorized {
-                        self.presentImagePicker(sourceType: photos)
-                    } else {
-                        self.troubleAlert(errorMessage: noPermissionMessage, linkToSettings: true)
-                    }
-                })
-            default:
-                troubleAlert(errorMessage: "We can't access your photos. Maybe you didn't give us access?", linkToSettings: true)
-            }
-            
-        } else {
-            troubleAlert(errorMessage: "You don't seem to have any photos in your library.", linkToSettings: false)
-        }
-    }
-    
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true, completion: nil)
         let newImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage
@@ -178,7 +214,7 @@ class PreparationController: UIViewController, UIImagePickerControllerDelegate, 
         processedPicked(image: newImage)
     }
     
-    func displayCamera() {
+    @objc func displayCamera() {
         let sourceType = UIImagePickerController.SourceType.camera
         
         if UIImagePickerController.isSourceTypeAvailable(sourceType) {
@@ -206,6 +242,36 @@ class PreparationController: UIViewController, UIImagePickerControllerDelegate, 
             troubleAlert(errorMessage: "There was a problem with your camera.", linkToSettings: false)
         }
     }
+
+    @objc func displayLibrary() {
+         
+         let photos = UIImagePickerController.SourceType.photoLibrary
+         
+         if UIImagePickerController.isSourceTypeAvailable(photos) {
+             let status = PHPhotoLibrary.authorizationStatus()
+             let noPermissionMessage = "We don't have access to your photos."
+             
+             switch status {
+             case .authorized:
+                 presentImagePicker(sourceType: photos)
+             case .denied, .restricted:
+                 troubleAlert(errorMessage: noPermissionMessage, linkToSettings: true)
+             case .notDetermined:
+                 PHPhotoLibrary.requestAuthorization({(newStatus) in
+                     if newStatus == .authorized {
+                         self.presentImagePicker(sourceType: photos)
+                     } else {
+                         self.troubleAlert(errorMessage: noPermissionMessage, linkToSettings: true)
+                     }
+                 })
+             default:
+                 troubleAlert(errorMessage: "We can't access your photos. Maybe you didn't give us access?", linkToSettings: true)
+             }
+             
+         } else {
+             troubleAlert(errorMessage: "You don't seem to have any photos in your library.", linkToSettings: false)
+         }
+     }
     
     @objc func chooseRandomImage() -> UIImage? {
         let currentImage = Tile.originalImage
@@ -247,17 +313,4 @@ class PreparationController: UIViewController, UIImagePickerControllerDelegate, 
     }
     
     @IBAction func unwindAction(unwindSegue: UIStoryboardSegue) {}
-    
-    @IBAction func buttonPickRandom(_ sender: Any) {
-        processedPicked(image: chooseRandomImage())
-    }
-    
-    @IBAction func buttonPhotoLibrary(_ sender: Any) {
-        displayLibrary()
-    }
-    
-    @IBAction func buttonCamera(_ sender: Any) {
-        displayCamera()
-    }
-    
 }

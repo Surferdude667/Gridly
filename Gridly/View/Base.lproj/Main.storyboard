@@ -17,37 +17,9 @@
                     <view key="view" contentMode="scaleToFill" id="KbA-hc-a98">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jEH-ef-nMf">
-                                <rect key="frame" x="162" y="433" width="90" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" red="0.79752033950000001" green="0.26084935669999998" blue="0.1724962592" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
-                                <state key="normal" title="Pick Random"/>
-                                <connections>
-                                    <action selector="buttonPickRandom:" destination="wdK-BW-ziU" eventType="touchUpInside" id="W7e-5x-LQl"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="auA-oW-vOq">
-                                <rect key="frame" x="97" y="562" width="92" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Photo Library"/>
-                                <connections>
-                                    <action selector="buttonPhotoLibrary:" destination="wdK-BW-ziU" eventType="touchUpInside" id="9RC-Rl-641"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pPv-BX-54I">
-                                <rect key="frame" x="264" y="562" width="54" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <state key="normal" title="Camera"/>
-                                <connections>
-                                    <action selector="buttonCamera:" destination="wdK-BW-ziU" eventType="touchUpInside" id="P3w-L8-HXR"/>
-                                </connections>
-                            </button>
-                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                     </view>
                     <connections>
-                        <outlet property="buttonPickRandom" destination="jEH-ef-nMf" id="dQw-7r-Q08"/>
                         <segue destination="BYZ-38-t0r" kind="presentation" identifier="toGameSegue" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="dRq-as-oQ3"/>
                     </connections>
                 </viewController>
