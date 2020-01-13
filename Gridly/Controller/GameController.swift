@@ -24,6 +24,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     @IBOutlet var puzzleDestinations: [UIImageView]!
     @IBOutlet var puzzleTiles: [UIImageView]!
     @IBOutlet var puzzleStacks: [UIImageView]!
+    
     @IBOutlet weak var labelMoveCount: UILabel!
     @IBOutlet weak var labelInfo: UILabel!
     @IBOutlet weak var buttonStartGame: UIButton!
@@ -41,6 +42,8 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
         configureTapGestures()
         addGameControls()
         gameControlsView.isHidden = true
+        buttonNewGame.imageView?.contentMode = .scaleAspectFit
+        buttonPreview.imageView?.contentMode = .scaleAspectFit
         
         for element in puzzleStacks {
             element.alpha = 0.0
@@ -514,8 +517,8 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     func animateResult() {
         UIView.animate(withDuration: 2.5, delay: 0.0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.5, options: [], animations: {
             for element in Tile.shared {
-                self.puzzleTiles[element.id].bounds.size = self.puzzleStacks[element.id].bounds.size
-                self.puzzleStacks[element.stackPairID!].backgroundColor = UIColor.green
+                self.puzzleTiles[element.id].alpha = 0.5
+                self.puzzleDestinations[element.id].backgroundColor = UIColor.green
             }
         }) { (success) in
             self.performSegue(withIdentifier: "resultSegue", sender: self)
@@ -590,7 +593,8 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     @IBAction func buttonPreview(_ sender: Any) {
-        preview()
+        //preview()
+        self.performSegue(withIdentifier: "resultSegue", sender: self)
         buttonPreview.alpha = 0.2
     }
     
