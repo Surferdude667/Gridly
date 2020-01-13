@@ -5,6 +5,11 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="Obvia-Light.otf">
+            <string>Obvia-Light</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--Preparation Controller-->
         <scene sceneID="PgP-QB-mlW">
@@ -17,7 +22,18 @@
                     <view key="view" contentMode="scaleToFill" id="KbA-hc-a98">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" insetsLayoutMarginsFromSafeArea="NO" image="welcome" translatesAutoresizingMaskIntoConstraints="NO" id="QMv-Ay-x1H">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                            </imageView>
+                        </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="QMv-Ay-x1H" secondAttribute="bottom" id="06Y-6q-VpZ"/>
+                            <constraint firstAttribute="trailing" secondItem="QMv-Ay-x1H" secondAttribute="trailing" id="Gwd-NO-yLT"/>
+                            <constraint firstItem="QMv-Ay-x1H" firstAttribute="leading" secondItem="KbA-hc-a98" secondAttribute="leading" id="L5C-gA-OmV"/>
+                            <constraint firstItem="QMv-Ay-x1H" firstAttribute="top" secondItem="KbA-hc-a98" secondAttribute="top" id="c2A-bb-ocf"/>
+                        </constraints>
                     </view>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="presentation" identifier="toGameSegue" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="dRq-as-oQ3"/>
@@ -25,7 +41,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="m5x-BJ-tNO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-604" y="138"/>
+            <point key="canvasLocation" x="-604.34782608695662" y="137.94642857142856"/>
         </scene>
         <!--Game Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -576,7 +592,7 @@
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Score" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3Kp-f3-YQ8">
                                 <rect key="frame" x="137" y="245" width="161" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <fontDescription key="fontDescription" name="Obvia-Light" family="Obvia" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
@@ -642,5 +658,6 @@
         <image name="background" width="5120" height="2880"/>
         <image name="exit" width="28" height="28"/>
         <image name="eye_black" width="512" height="512"/>
+        <image name="welcome" width="2500" height="1667"/>
     </resources>
 </document>

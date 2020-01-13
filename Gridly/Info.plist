@@ -64,5 +64,13 @@
 	<string>$(PRODUCT_NAME) photo use</string>
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) camera use</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Obvia-Light.otf</string>
+		<string>Obvia-Reg.otf</string>
+		<string>Obvia-Thin.otf</string>
+		<string>Obvia-Bold.otf</string>
+		<string>Obvia-Medium.otf</string>
+	</array>
 </dict>
 </plist>
