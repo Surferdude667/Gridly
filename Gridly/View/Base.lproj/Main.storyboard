@@ -423,7 +423,7 @@
                                         </label>
                                     </subviews>
                                 </view>
-                                <blurEffect style="regular"/>
+                                <blurEffect style="dark"/>
                             </visualEffectView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -603,7 +603,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 </view>
-                                <blurEffect style="regular"/>
+                                <blurEffect style="dark"/>
                             </visualEffectView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -621,7 +621,7 @@
                     <connections>
                         <outlet property="backgroundView" destination="B0N-2w-fEY" id="PJn-5g-ibl"/>
                         <outlet property="blurView" destination="10g-3E-hrh" id="AYQ-z8-2KB"/>
-                        <segue destination="yhB-yB-9GQ" kind="unwind" identifier="unwindToStart" unwindAction="unwindActionWithUnwindSegue:" id="soE-a9-2yk"/>
+                        <segue destination="yhB-yB-9GQ" kind="unwind" identifier="unwindToStart" animates="NO" unwindAction="unwindActionWithUnwindSegue:" id="soE-a9-2yk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xKq-LR-b2F" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

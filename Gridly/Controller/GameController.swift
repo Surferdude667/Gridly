@@ -32,6 +32,10 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     @IBOutlet weak var buttonPreview: UIButton!
     @IBOutlet weak var buttonExit: UIButton!
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     func configure() {
         if let gameImage = Tile.originalImage {
             contentImage.image = gameImage

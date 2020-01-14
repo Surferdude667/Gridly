@@ -21,11 +21,14 @@ class PreparationController: UIViewController, UIImagePickerControllerDelegate, 
     private var regularConstraints: [NSLayoutConstraint] = []
     private var sharedConstraints: [NSLayoutConstraint] = []
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
     
     private lazy var viewContainer: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+        let viewContainer = UIView()
+        viewContainer.translatesAutoresizingMaskIntoConstraints = false
+        return viewContainer
     }()
     
     private lazy var randomButton: UIButton = {

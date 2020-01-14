@@ -26,7 +26,7 @@
 
 /* Begin PBXFileReference section */
 		F61EE7AD23AA55F000440A8C /* Tile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tile.swift; sourceTree = "<group>"; };
-		F62DB62C239E3C6E009AE655 /* Gridly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gridly.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F62DB62C239E3C6E009AE655 /* Play Puzzle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Play Puzzle.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F62DB62F239E3C6E009AE655 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F62DB631239E3C6E009AE655 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		F62DB633239E3C6E009AE655 /* GameController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameController.swift; sourceTree = "<group>"; };
@@ -66,7 +66,7 @@
 		F62DB62D239E3C6E009AE655 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F62DB62C239E3C6E009AE655 /* Gridly.app */,
+				F62DB62C239E3C6E009AE655 /* Play Puzzle.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -143,7 +143,7 @@
 			);
 			name = Gridly;
 			productName = Gridly;
-			productReference = F62DB62C239E3C6E009AE655 /* Gridly.app */;
+			productReference = F62DB62C239E3C6E009AE655 /* Play Puzzle.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -360,7 +360,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = art.bjornlau.Gridly;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Play Puzzle";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -378,7 +378,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = art.bjornlau.Gridly;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Play Puzzle";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

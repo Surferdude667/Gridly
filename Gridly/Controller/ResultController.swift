@@ -24,10 +24,14 @@ class ResultController: UIViewController {
     private var iPadPortraitConstraints: [NSLayoutConstraint] = []
     private var iPadLandscapeConstraints: [NSLayoutConstraint] = []
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     private lazy var viewContainer: UIView = {
-        let view = UIView()
-        view.translatesAutoresizingMaskIntoConstraints = false
-        return view
+        let viewContainer = UIView()
+        viewContainer.translatesAutoresizingMaskIntoConstraints = false
+        return viewContainer
     }()
     
     private lazy var shareButton: UIButton = {
@@ -213,7 +217,6 @@ class ResultController: UIViewController {
         super.viewDidLoad()
         configure()
     }
-    
     
     @objc func displaySharingOptions() {
         let message = score
