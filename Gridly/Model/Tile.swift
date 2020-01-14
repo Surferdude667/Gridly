@@ -16,7 +16,6 @@ class Tile {
     var puzzlePositionInGrid: Int?
     var stackPairID: Int?
     
-    //  TODO: Remove cropped image and original image. (Pass data with Segue instead). Even concider removing the shared.
     static var originalImage: UIImage?
     static var croppedImage: UIImage?
     static var shared = [Tile]()
