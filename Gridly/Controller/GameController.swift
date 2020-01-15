@@ -17,7 +17,6 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     var squarePath = UIBezierPath()
     let gridLayer = CALayer()
     var moveCount = 0
-    var previewUsed = false
     
     @IBOutlet weak var contentImage: UIImageView!
     @IBOutlet weak var blurView: UIVisualEffectView!
@@ -146,7 +145,10 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func createPuzzle() {
-        labelInfo.text = "Loading puzzle 🤩"
+        labelInfo.text = "Loading puzzle 🚀"
+        labelInfo.textColor = UIColor.yellow
+        buttonStartGame.alpha = 0.2
+        buttonStartGame.isUserInteractionEnabled = false
         
         //  TODO: This should use a completion handler instead...
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
@@ -477,7 +479,7 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
             buttonPreview.frame.origin.x = squarePath.bounds.origin.x - buttonPreview.bounds.width - 20
             buttonPreview.frame.origin.y = squarePath.bounds.origin.y + squarePath.bounds.height / 4 * 3 - buttonPreview.bounds.height
             
-        //  Portrait
+            //  Portrait
         } else if UIScreen.main.bounds.height > UIScreen.main.bounds.width {
             buttonNewGame.frame.origin.x = squarePath.bounds.origin.x
             buttonNewGame.frame.origin.y = squarePath.bounds.origin.y - 65
@@ -492,30 +494,31 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     
     
     func preview() {
+        buttonPreview.alpha = 0.2
+        buttonPreview.isUserInteractionEnabled = false
         for i in 0..<Tile.shared.count {
             
-            if previewUsed == false {
+            //  Move pieces to correct place
+            if Tile.shared[i].correctlyPlaced == false && Tile.shared[i].puzzlePositionInGrid != nil {
+                GameHelper.moveView(view: puzzleTiles[i], to: puzzleDestinations[i].frame.origin)
+            } else if Tile.shared[i].puzzlePositionInGrid == nil {
+                puzzleTiles[i].bounds.size = puzzleDestinations[i].bounds.size
+                GameHelper.moveView(view: puzzleTiles[i], to: puzzleDestinations[i].frame.origin)
+            }
+            
+            //  Move pieces back after 2 sec
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+                self.buttonPreview.alpha = 1.0
+                self.buttonPreview.isUserInteractionEnabled = true
                 
-                //  Move pieces to correct place
                 if Tile.shared[i].correctlyPlaced == false && Tile.shared[i].puzzlePositionInGrid != nil {
-                    GameHelper.moveView(view: puzzleTiles[i], to: puzzleDestinations[i].frame.origin)
+                    GameHelper.moveView(view: self.puzzleTiles[i], to: self.puzzleDestinations[Tile.shared[i].puzzlePositionInGrid!].frame.origin)
                 } else if Tile.shared[i].puzzlePositionInGrid == nil {
-                    puzzleTiles[i].bounds.size = puzzleDestinations[i].bounds.size
-                    GameHelper.moveView(view: puzzleTiles[i], to: puzzleDestinations[i].frame.origin)
-                }
-                
-                //  Move pieces back after 2 sec
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-                    if Tile.shared[i].correctlyPlaced == false && Tile.shared[i].puzzlePositionInGrid != nil {
-                        GameHelper.moveView(view: self.puzzleTiles[i], to: self.puzzleDestinations[Tile.shared[i].puzzlePositionInGrid!].frame.origin)
-                    } else if Tile.shared[i].puzzlePositionInGrid == nil {
-                        self.puzzleTiles[i].bounds.size = self.puzzleStacks[i].bounds.size
-                        GameHelper.moveView(view: self.puzzleTiles[i], to: self.puzzleStacks[Tile.shared[i].stackPairID!].frame.origin)
-                    }
+                    self.puzzleTiles[i].bounds.size = self.puzzleStacks[i].bounds.size
+                    GameHelper.moveView(view: self.puzzleTiles[i], to: self.puzzleStacks[Tile.shared[i].stackPairID!].frame.origin)
                 }
             }
         }
-        previewUsed = true
     }
     
     func animateResult() {
@@ -597,9 +600,8 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     @IBAction func buttonPreview(_ sender: Any) {
-        preview()
-        //self.performSegue(withIdentifier: "resultSegue", sender: self)
-        buttonPreview.alpha = 0.2
+        //preview()
+        self.performSegue(withIdentifier: "resultSegue", sender: self)
     }
     
     @IBAction func buttonNewGame(_ sender: Any) {

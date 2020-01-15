@@ -17,7 +17,7 @@
         <!--Preparation Controller-->
         <scene sceneID="PgP-QB-mlW">
             <objects>
-                <viewController id="wdK-BW-ziU" customClass="PreparationController" customModule="Gridly" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="wdK-BW-ziU" customClass="PreparationController" customModule="Play_Puzzle" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="dqU-P3-a7a"/>
                         <viewControllerLayoutGuide type="bottom" id="AoY-Jd-ZUk"/>
@@ -49,7 +49,7 @@
         <!--Game Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="GameController" customModule="Gridly" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="GameController" customModule="Play_Puzzle" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="43K-z6-N35"/>
                         <viewControllerLayoutGuide type="bottom" id="a3q-Gy-jBU"/>
@@ -495,7 +495,7 @@
                         <outletCollection property="puzzleStacks" destination="qa9-h2-FcZ" collectionClass="NSMutableArray" id="Lmz-bM-jtn"/>
                         <outletCollection property="puzzleStacks" destination="MBr-sf-LIu" collectionClass="NSMutableArray" id="rXe-VZ-2gt"/>
                         <outletCollection property="puzzleStacks" destination="rHU-Ys-4L6" collectionClass="NSMutableArray" id="6X5-0m-xA1"/>
-                        <segue destination="f7o-RQ-5fA" kind="presentation" identifier="resultSegue" modalPresentationStyle="fullScreen" modalTransitionStyle="crossDissolve" id="uqT-SV-sxd"/>
+                        <segue destination="f7o-RQ-5fA" kind="presentation" identifier="resultSegue" modalPresentationStyle="fullScreen" modalTransitionStyle="coverVertical" id="uqT-SV-sxd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -585,7 +585,7 @@
         <!--Result Controller-->
         <scene sceneID="pBl-7s-BNI">
             <objects>
-                <viewController id="f7o-RQ-5fA" customClass="ResultController" customModule="Gridly" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="f7o-RQ-5fA" customClass="ResultController" customModule="Play_Puzzle" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="YrL-qC-mPi"/>
                         <viewControllerLayoutGuide type="bottom" id="xEE-TD-TQu"/>
