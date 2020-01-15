@@ -245,7 +245,7 @@ class ResultController: UIViewController {
         configure()
     }
     
-    //  TODO: Setup for iPad
+
     @objc func displaySharingOptions() {
         let message = score
         let image = Tile.croppedImage!

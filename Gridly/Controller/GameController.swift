@@ -600,8 +600,8 @@ class GameController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     @IBAction func buttonPreview(_ sender: Any) {
-        //preview()
-        self.performSegue(withIdentifier: "resultSegue", sender: self)
+        preview()
+        //self.performSegue(withIdentifier: "resultSegue", sender: self)
     }
     
     @IBAction func buttonNewGame(_ sender: Any) {
